@@ -6,13 +6,24 @@ import {
   IconButton,
   Box,
   CssBaseline,
+  List,
+  ListItem,
+  ListItemText,
+  ListItemIcon,
+  Collapse,
 } from "@mui/material";
-import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
-import ChevronRightIcon from "@mui/icons-material/ChevronRight";
-import Content from "./Content"; // Content 컴포넌트를 임포트
-import MenuItems from "./MenuItems"; // MenuItems 컴포넌트를 임포트
+import {
+  ExpandLess,
+  ExpandMore,
+  ChevronLeft,
+  ChevronRight,
+} from "@mui/icons-material";
+import InboxIcon from "@mui/icons-material/MoveToInbox";
+import MailIcon from "@mui/icons-material/Mail";
+import { Link, Routes, Route } from "react-router-dom";
+import ScheduleForm from "../components/scheduleManagements/ScheduleForm"; // ScheduleForm 컴포넌트를 임포트
 
-const drawerWidth = 240; // Drawer 폭조절
+const drawerWidth = 240;
 
 const openedMixin = (theme) => ({
   width: drawerWidth,
@@ -38,7 +49,7 @@ const closedMixin = (theme) => ({
 const DrawerHeader = styled("div")(({ theme }) => ({
   display: "flex",
   alignItems: "center",
-  justifyContent: "space-between", // 화살표를 오른쪽으로 이동
+  justifyContent: "space-between",
   padding: theme.spacing(0, 1),
   ...theme.mixins.toolbar,
 }));
@@ -59,28 +70,36 @@ const CustomDrawer = styled(MuiDrawer, {
     "& .MuiDrawer-paper": closedMixin(theme),
   }),
   "&.MuiDrawer-docked": {
-    position: "fixed", // Drawer를 고정 위치로 설정
-    left: 0, // 왼쪽으로 정렬
-    top: "64px", // 헤더 아래에 위치하도록 설정 (헤더 높이에 맞게 조정)
-    height: "calc(100% - 64px)", // 헤더를 제외한 전체 높이로 설정 (헤더 높이에 맞게 조정)
+    position: "fixed",
+    left: 0,
+    top: "64px",
+    height: "calc(100% - 64px)",
   },
 }));
 
-// CustomBox 스타일 정의
-const CustomBox = styled(Box)(({ theme }) => ({
+const CustomBox = styled(Box)(({ theme, open }) => ({
   display: "flex",
   flexDirection: "column",
-  alignItems: "flex-start", // 왼쪽 정렬
+  alignItems: "flex-start",
   justifyContent: "center",
   padding: theme.spacing(2),
   backgroundColor: theme.palette.background.default,
   color: theme.palette.text.primary,
   flexGrow: 1,
-  marginLeft: drawerWidth, // Drawer의 폭만큼 마진을 추가하여 컨텐츠가 왼쪽으로 이동하지 않도록 함
+  marginLeft: open ? drawerWidth : `calc(${theme.spacing(7)} + 1px)`,
+  transition: theme.transitions.create("margin-left", {
+    easing: theme.transitions.easing.sharp,
+    duration: theme.transitions.duration.leavingScreen,
+  }),
 }));
 
-const Drawer = ({ open, handleDrawerClose, handleMenuItemClick }) => {
+const Drawer = ({ open, handleDrawerClose }) => {
   const theme = useTheme();
+  const [openNestedList, setOpenNestedList] = useState(false);
+
+  const handleClick = () => {
+    setOpenNestedList(!openNestedList);
+  };
 
   return (
     <Box sx={{ display: "flex" }}>
@@ -90,18 +109,46 @@ const Drawer = ({ open, handleDrawerClose, handleMenuItemClick }) => {
           <div />
           <IconButton onClick={handleDrawerClose}>
             {theme.direction === "rtl" ? (
-              <ChevronRightIcon />
+              <ChevronRight />
             ) : (
-              <ChevronLeftIcon />
+              <ChevronLeft />
             )}
           </IconButton>
         </DrawerHeader>
         <Divider />
-        <MenuItems open={open} handleMenuItemClick={handleMenuItemClick} />
+        <List>
+          <ListItem button onClick={handleClick}>
+            <ListItemIcon>
+              <InboxIcon />
+            </ListItemIcon>
+            <ListItemText primary="Inbox" />
+            {openNestedList ? <ExpandLess /> : <ExpandMore />}
+          </ListItem>
+          <Collapse in={openNestedList} timeout="auto" unmountOnExit>
+            <List component="div" disablePadding>
+              <ListItem button sx={{ pl: 4 }}>
+                <ListItemIcon>
+                  <MailIcon />
+                </ListItemIcon>
+                <ListItemText primary="Nested Item 1" />
+              </ListItem>
+              <ListItem button component={Link} to="/schedule" sx={{ pl: 4 }}>
+                <ListItemIcon>
+                  <MailIcon />
+                </ListItemIcon>
+                <ListItemText primary="Nested Item 2" />
+              </ListItem>
+            </List>
+          </Collapse>
+        </List>
       </CustomDrawer>
-      <Content open={open} drawerWidth={drawerWidth}>
-        {/* 여기에 콘텐츠 내용을 추가합니다 */}
-      </Content>
+      <CustomBox open={open}>
+        <Box sx={{ p: 3 }}>
+          <Routes>
+            <Route path="/schedule" element={<ScheduleForm />} />
+          </Routes>
+        </Box>
+      </CustomBox>
     </Box>
   );
 };
