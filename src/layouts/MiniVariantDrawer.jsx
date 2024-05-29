@@ -18,6 +18,9 @@ const LockerManagement = lazy(() =>
 const RentalManagement = lazy(() =>
   import("../components/centerManagements/rentalManagements/RentalManagement")
 );
+const ScheduleForm = lazy(() =>
+  import("../components/ScheduleManagement/ScheduleForm")
+);
 
 export default function MiniVariantDrawer() {
   const [open, setOpen] = useState(false);
@@ -48,6 +51,9 @@ export default function MiniVariantDrawer() {
       case "대여상품관리":
         setCurrentComponent(<RentalManagement />);
         break;
+      case "레슨스케줄관리":
+        setCurrentComponent(<ScheduleForm />);
+        break;
       default:
         setCurrentComponent(
           <Typography paragraph>{text} 내용이 들어가는 곳</Typography>
@@ -60,7 +66,7 @@ export default function MiniVariantDrawer() {
   };
 
   return (
-    <Box sx={{ display: "flex" }}>
+    <Box sx={{ display: "flex", width: "100vw", height: "100vh" }}>
       <CssBaseline />
       <AppBar
         open={open}

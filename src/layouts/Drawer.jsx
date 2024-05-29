@@ -1,4 +1,3 @@
-import React, { useState } from "react";
 import { styled, useTheme } from "@mui/material/styles";
 import {
   Drawer as MuiDrawer,
@@ -59,10 +58,16 @@ const CustomDrawer = styled(MuiDrawer, {
     "& .MuiDrawer-paper": closedMixin(theme),
   }),
   "&.MuiDrawer-docked": {
+    anchor: "left",
+    backgroundColor: "pink",
     position: "fixed", // Drawer를 고정 위치로 설정
     left: 0, // 왼쪽으로 정렬
     top: "64px", // 헤더 아래에 위치하도록 설정 (헤더 높이에 맞게 조정)
     height: "calc(100% - 64px)", // 헤더를 제외한 전체 높이로 설정 (헤더 높이에 맞게 조정)
+  },
+  "&.MuiBox-root": {
+    position: "absolute",
+    left: 0,
   },
 }));
 
@@ -76,7 +81,7 @@ const CustomBox = styled(Box)(({ theme }) => ({
   backgroundColor: theme.palette.background.default,
   color: theme.palette.text.primary,
   flexGrow: 1,
-  marginLeft: drawerWidth, // Drawer의 폭만큼 마진을 추가하여 컨텐츠가 왼쪽으로 이동하지 않도록 함
+  // marginLeft: drawerWidth, // 이 부분을 제거하여 컨텐츠가 왼쪽으로 이동하도록 함
 }));
 
 const Drawer = ({ open, handleDrawerClose, handleMenuItemClick }) => {
