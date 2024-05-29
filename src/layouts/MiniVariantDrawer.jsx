@@ -6,17 +6,18 @@ import Drawer from "./Drawer";
 import Content from "./Content";
 
 // Lazy load components
-const MemberCreate = lazy(() => import("../components/members/MemberForm"));
+const MemberForm = lazy(() => import("../components/members/MemberForm"));
+const ScheduleForm = lazy(() => import("../components/scheduleManagements/ScheduleForm"));
 const FacilityManagement = lazy(() =>
   import(
     "../components/centerManagements/FacilityManagements/FacilityManagement"
   )
 );
-const LockerManagement = lazy(() =>
-  import("../components/centerManagements/lockerManagements/LockerManagement")
+const LockerForm = lazy(() =>
+  import("../components/centerManagements/lockerManagements/LockerForm")
 );
-const RentalManagement = lazy(() =>
-  import("../components/centerManagements/rentalManagements/RentalManagement")
+const RentalForm = lazy(() =>
+  import("../components/centerManagements/rentalManagements/RentalForm")
 );
 
 export default function MiniVariantDrawer() {
@@ -37,16 +38,19 @@ export default function MiniVariantDrawer() {
   const handleMenuItemClick = (text) => {
     switch (text) {
       case "신규회원등록":
-        setCurrentComponent(<MemberCreate />);
+        setCurrentComponent(<MemberForm />);
+        break;
+        case "레슨스케줄관리":
+        setCurrentComponent(<ScheduleForm />);
         break;
       case "이용권상품관리":
         setCurrentComponent(<FacilityManagement />);
         break;
       case "락커관리":
-        setCurrentComponent(<LockerManagement />);
+        setCurrentComponent(<LockerForm />);
         break;
       case "대여상품관리":
-        setCurrentComponent(<RentalManagement />);
+        setCurrentComponent(<RentalForm />);
         break;
       default:
         setCurrentComponent(
