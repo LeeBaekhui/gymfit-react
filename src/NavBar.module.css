@@ -1,0 +1,64 @@
+#root {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+}
+
+/* NavBar.module.css */
+.navBar {
+    display: flex;
+    justify-content: space-around;
+    padding: 20px;
+    background-color: #f1f1f1;
+}
+
+@media (min-width: 1024px) { /* 노트북 화면에 대한 미디어 쿼리 추가[^1^][1] */
+    .navBar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background-color: #f8f8f8;
+        padding: 1rem;
+    }
+}
+
+.navList {
+    display: flex;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.navItem {
+    margin-right: 1rem;
+}
+
+.navLink {
+    text-decoration: none;
+    color: #333;
+    font-weight: bold;
+    padding: 0.5rem;
+    transition: color 0.3s ease;
+}
+
+.navLink:hover {
+    color: #007bff;
+}
+
+@media (max-width: 768px) {
+    .navBar {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .navList {
+        flex-direction: column;
+        margin-top: 1rem;
+    }
+
+    .navItem {
+        margin-right: 0;
+        margin-bottom: 0.5rem;
+    }
+}
