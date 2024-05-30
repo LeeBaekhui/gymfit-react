@@ -1,4 +1,3 @@
-import React from "react";
 import { Box, Button, Input } from "@mui/material";
 import { styled, useTheme } from "@mui/material/styles";
 import SearchIcon from "@mui/icons-material/Search";

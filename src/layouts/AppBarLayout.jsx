@@ -1,4 +1,3 @@
-import React from "react";
 import { styled } from "@mui/material/styles";
 import MuiAppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
@@ -6,6 +5,7 @@ import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import MenuIcon from "@mui/icons-material/Menu";
 import { useDrawerContext } from "./DrawerContext";
+import AppBarMenu from "./AppBarMenu";
 
 const AppBar = styled(MuiAppBar, {
   shouldForwardProp: (prop) => prop !== "open",
@@ -46,6 +46,7 @@ export default function AppBarLayout() {
         <Typography variant="h6" noWrap component="div">
           Mini variant drawer
         </Typography>
+        <AppBarMenu /> {/* AppBarMenu 컴포넌트 추가 */}
       </Toolbar>
     </AppBar>
   );
