@@ -12,7 +12,7 @@ const ScheduleForm = () => {
         alignItems: "center",
       }}
     >
-      <Typography variant="h4">Schedule Form</Typography>
+      <Typography variant="h4">ScheduleForm 화면입니다.</Typography>
       {/* 스케줄 폼 내용 */}
     </Box>
   );
