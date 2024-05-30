@@ -2,7 +2,8 @@ import React from "react";
 import Box from "@mui/material/Box";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
-import ScheduleForm from "../components/scheduleManagement/ScheduleForm"; // ScheduleForm 컴포넌트 import
+import MemberLayout from "../components/members/MemberLayout"; // MemberLayout 컴포넌트 import
+import ScheduleForm from "../components/ScheduleManagement/ScheduleForm"; // ScheduleForm 컴포넌트 import
 import { useDrawerContext } from "./DrawerContext";
 
 const DrawerHeader = styled("div")(({ theme }) => ({
@@ -18,6 +19,8 @@ export default function MainContentLayout() {
 
   const renderContent = () => {
     switch (selectedMenu) {
+      case "신규회원등록": // 신규회원등록 메뉴가 선택되었을 때
+      return <MemberLayout />;
       case "레슨스케줄관리":
         return <ScheduleForm />;
       default:

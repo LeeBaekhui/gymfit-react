@@ -11,7 +11,7 @@ import ListItemText from "@mui/material/ListItemText";
 import Collapse from "@mui/material/Collapse";
 import ExpandLess from "@mui/icons-material/ExpandLess";
 import ExpandMore from "@mui/icons-material/ExpandMore";
-import InboxIcon from "@mui/icons-material/MoveToInbox";
+import GroupIcon from '@mui/icons-material/Group';
 import MailIcon from "@mui/icons-material/Mail";
 import MuiDrawer from "@mui/material/Drawer";
 import { useDrawerContext } from "./DrawerContext";
@@ -153,8 +153,9 @@ export default function DrawerLayout() {
                 }
               }}
             >
+            {/* 아이콘 관리 */}
               <ListItemIcon>
-                {menuItem.title === "회원출관리" ? <InboxIcon /> : <MailIcon />}
+                {menuItem.title === "회원출관리" ? <GroupIcon /> : <MailIcon />}
               </ListItemIcon>
               <ListItemText primary={menuItem.title} />
               {open && // 서랍이 열려있을 때만 드롭다운 아이콘 표시
