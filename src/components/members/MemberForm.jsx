@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import {
   Button,
   TextField,
@@ -104,8 +104,15 @@ const MemberForm = ({ existingMember, photo, setPhoto }) => {
   };
 
   return (
-    <Paper sx={{ p: 2, height: '50%', width: '70%', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-      <Grid container spacing={1}>
+    <Paper
+      sx={{
+        p: 2,
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
+      }}
+    >
+      <Grid container spacing={2}>
         <Grid item xs={12} sm={6} md={4}>
           <TextField
             required
@@ -241,7 +248,7 @@ const MemberForm = ({ existingMember, photo, setPhoto }) => {
             required
             id="bmi"
             name="bmi"
-            label="체질량지수"
+            label="체질량지수(BMI)"
             fullWidth
             value={member.bmi}
             InputProps={{
@@ -340,12 +347,7 @@ const MemberForm = ({ existingMember, photo, setPhoto }) => {
           />
         </Grid>
         <Grid item xs={12}>
-          <Button
-            type="submit"
-            variant="contained"
-            color="primary"
-            fullWidth
-          >
+          <Button type="submit" variant="contained" color="primary" fullWidth>
             {member.id ? "Update Member" : "Create Member"}
             저장
           </Button>

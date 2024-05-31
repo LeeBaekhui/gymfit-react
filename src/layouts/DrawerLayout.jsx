@@ -11,10 +11,13 @@ import ListItemText from "@mui/material/ListItemText";
 import Collapse from "@mui/material/Collapse";
 import ExpandLess from "@mui/icons-material/ExpandLess";
 import ExpandMore from "@mui/icons-material/ExpandMore";
-import GroupIcon from '@mui/icons-material/Group';
+import GroupIcon from "@mui/icons-material/Group";
 import MailIcon from "@mui/icons-material/Mail";
 import MuiDrawer from "@mui/material/Drawer";
-import { useDrawerContext } from "./DrawerContext";
+import SettingsIcon from "@mui/icons-material/Settings";
+import Box from "@mui/material/Box"; // Box 컴포넌트 임포트
+import { useDrawerContext } from "../layouts/DrawerContext";
+import MainContentLayout from "./MainContentLayout"; // MainContentLayout 컴포넌트 import
 
 const drawerWidth = 240;
 
@@ -92,25 +95,8 @@ const menuItems = [
     items: ["매출내역", "지출내역", "정산내역", "직정산"],
   },
   {
-    title: "센터관리",
-    items: [
-      "락커관리",
-      "이용권상품관리",
-      "대여상품관리",
-      "센터정보관리",
-      "터치모니터관리",
-      "회원참여설정관",
-    ],
-  },
-  {
-    title: "시스템관리",
-    items: [
-      "내부사용자 관리",
-      "관리자 접속로그",
-      "비밀번호변경",
-      "회원데이터업로드",
-      "배너관리",
-    ],
+    title: "라커관리",
+    items: [],
   },
   {
     title: "고객관리",
@@ -127,64 +113,81 @@ export default function DrawerLayout() {
     handleMenuClick,
     openSubmenus,
     handleSubMenuClick,
+    setSelectedMenu,
   } = useDrawerContext();
 
+  const handleOpenGymSetting = () => {
+    setSelectedMenu("설정");
+  };
+
   return (
-    <Drawer variant="permanent" open={open}>
-      <DrawerHeader>
-        <IconButton onClick={handleDrawerClose}>
-          {theme.direction === "rtl" ? (
-            <ChevronRightIcon />
-          ) : (
-            <ChevronLeftIcon />
-          )}
-        </IconButton>
-      </DrawerHeader>
-      <Divider />
-      <List>
-        {menuItems.map((menuItem) => (
-          <div key={menuItem.title}>
-            <ListItemButton
-              onClick={() => {
-                if (!open) {
-                  handleDrawerOpen(); // 서랍이 닫혀있을 때 열리게 하기
-                } else {
-                  handleMenuClick(menuItem.title); // 서랍이 열려있을 때는 메뉴 아이템 클릭 시 동작
-                }
-              }}
-            >
-            {/* 아이콘 관리 */}
-              <ListItemIcon>
-                {menuItem.title === "회원출관리" ? <GroupIcon /> : <MailIcon />}
-              </ListItemIcon>
-              <ListItemText primary={menuItem.title} />
-              {open && // 서랍이 열려있을 때만 드롭다운 아이콘 표시
-                (openSubmenus[menuItem.title] ? (
-                  <ExpandLess />
-                ) : (
-                  <ExpandMore />
-                ))}
-            </ListItemButton>
-            <Collapse
-              in={open && openSubmenus[menuItem.title]}
-              timeout="auto"
-              unmountOnExit
-            >
-              <List component="div" disablePadding>
-                {menuItem.items.map((item) => (
-                  <ListItemButton
-                    key={item}
-                    sx={{ pl: 4 }}
-                    onClick={() => handleSubMenuClick(item)}
-                  >
-                    <ListItemText primary={item} />
-                  </ListItemButton>
-                ))}
-              </List>
-            </Collapse>
-          </div>
-        ))}
-      </List>
-    </Drawer>
+    <Box sx={{ display: "flex" }}>
+      <Drawer variant="permanent" open={open}>
+        <DrawerHeader>
+          <IconButton onClick={handleDrawerClose}>
+            {theme.direction === "rtl" ? (
+              <ChevronRightIcon />
+            ) : (
+              <ChevronLeftIcon />
+            )}
+          </IconButton>
+        </DrawerHeader>
+        <Divider />
+        <List>
+          {menuItems.map((menuItem) => (
+            <div key={menuItem.title}>
+              <ListItemButton
+                onClick={() => {
+                  if (!open) {
+                    handleDrawerOpen(); // 서랍이 닫혀있을 때 열리게 하기
+                  } else {
+                    handleMenuClick(menuItem.title); // 서랍이 열려있을 때는 메뉴 아이템 클릭 시 동작
+                  }
+                }}
+              >
+                <ListItemIcon>
+                  {menuItem.title === "회원출관리" ? (
+                    <GroupIcon />
+                  ) : (
+                    <MailIcon />
+                  )}
+                </ListItemIcon>
+                <ListItemText primary={menuItem.title} />
+                {open && // 서랍이 열려있을 때만 드롭다운 아이콘 표시
+                  (openSubmenus[menuItem.title] ? (
+                    <ExpandLess />
+                  ) : (
+                    <ExpandMore />
+                  ))}
+              </ListItemButton>
+              <Collapse
+                in={open && openSubmenus[menuItem.title]}
+                timeout="auto"
+                unmountOnExit
+              >
+                <List component="div" disablePadding>
+                  {menuItem.items.map((item) => (
+                    <ListItemButton
+                      key={item}
+                      sx={{ pl: 4 }}
+                      onClick={() => handleSubMenuClick(item)}
+                    >
+                      <ListItemText primary={item} />
+                    </ListItemButton>
+                  ))}
+                </List>
+              </Collapse>
+            </div>
+          ))}
+          <Divider />
+          <ListItemButton onClick={handleOpenGymSetting}>
+            <ListItemIcon>
+              <SettingsIcon />
+            </ListItemIcon>
+            <ListItemText primary="설정" />
+          </ListItemButton>
+        </List>
+      </Drawer>
+    </Box>
   );
 }

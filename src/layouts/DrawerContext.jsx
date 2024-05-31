@@ -41,6 +41,7 @@ export const DrawerProvider = ({ children }) => {
         handleDrawerClose,
         handleMenuClick,
         handleSubMenuClick,
+        setSelectedMenu, // 추가
       }}
     >
       {children}

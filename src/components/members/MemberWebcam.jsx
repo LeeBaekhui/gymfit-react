@@ -1,5 +1,12 @@
-import React, { useState } from "react";
-import { Box, Button, IconButton, Typography, Paper } from "@mui/material";
+import { useState } from "react";
+import {
+  Box,
+  Button,
+  IconButton,
+  Typography,
+  Paper,
+  Grid,
+} from "@mui/material";
 import { styled } from "@mui/material/styles";
 import PhotoCamera from "@mui/icons-material/PhotoCamera";
 import Visibility from "@mui/icons-material/Visibility";
@@ -15,12 +22,17 @@ const Input = styled("input")({
 const MemberWebcam = ({ photo, setPhoto }) => {
   const [open, setOpen] = useState(false);
   const [showPhoto, setShowPhoto] = useState(true);
+  const [selectedPhoto, setSelectedPhoto] = useState(0);
+  const [photos, setPhotos] = useState([null, null, null, null]);
 
   const handleTogglePhoto = () => {
     setShowPhoto(!showPhoto);
   };
 
   const handleDeletePhoto = () => {
+    const updatedPhotos = [...photos];
+    updatedPhotos[selectedPhoto] = null;
+    setPhotos(updatedPhotos);
     setPhoto(null);
   };
 
@@ -28,6 +40,9 @@ const MemberWebcam = ({ photo, setPhoto }) => {
     const file = e.target.files[0];
     const reader = new FileReader();
     reader.onloadend = () => {
+      const updatedPhotos = [...photos];
+      updatedPhotos[selectedPhoto] = reader.result;
+      setPhotos(updatedPhotos);
       setPhoto(reader.result);
     };
     if (file) {
@@ -36,23 +51,36 @@ const MemberWebcam = ({ photo, setPhoto }) => {
   };
 
   const handleCapture = (imageSrc) => {
+    const updatedPhotos = [...photos];
+    updatedPhotos[selectedPhoto] = imageSrc;
+    setPhotos(updatedPhotos);
     setPhoto(imageSrc);
   };
 
+  const handlePhotoSelection = (index) => {
+    setSelectedPhoto(index);
+    setPhoto(photos[index]);
+  };
+
   return (
-    <Paper sx={{ p: 2, textAlign: 'center', height: '50%',width: '90%', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+    <Paper
+      sx={{
+        p: 2,
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+      }}
+    >
       <Box
         sx={{
-          width: 350,
-          height: 350,
-          maxWidth: "100%",
-          maxHeight: "100%",
+          width: "100%",
+          maxWidth: 350,
+          height: 270,
           backgroundColor: "#f0f0f0",
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
           mb: 2,
-          mx: 'auto', // 가운데 정렬
         }}
       >
         {photo && showPhoto ? (
@@ -65,19 +93,31 @@ const MemberWebcam = ({ photo, setPhoto }) => {
           <Typography>사진 미리보기</Typography>
         )}
       </Box>
+      <Box display="flex" justifyContent="center" alignItems="center" mb={2}>
+        {["1", "2", "3", "BMI"].map((label, index) => (
+          <Button
+            key={label}
+            onClick={() => handlePhotoSelection(index)}
+            sx={{ mx: 0.5, fontSize: "0.75rem", padding: "2px 6px" }} // 버튼 크기 더 작게 설정
+            variant={selectedPhoto === index ? "contained" : "outlined"}
+          >
+            {label}
+          </Button>
+        ))}
+      </Box>
       <Box display="flex" justifyContent="center" alignItems="center">
         <Button
           variant="contained"
           startIcon={<PhotoCamera />}
           onClick={() => setOpen(true)}
-          sx={{ mr: 1 }}
+          sx={{ mr: 1, fontSize: "0.75rem", padding: "6px 12px" }} // 버튼 크기 더 작게 설정
         >
           사진 촬영
         </Button>
-        <IconButton onClick={handleTogglePhoto}>
+        <IconButton onClick={handleTogglePhoto} size="small">
           {showPhoto ? <VisibilityOff /> : <Visibility />}
         </IconButton>
-        <IconButton onClick={handleDeletePhoto}>
+        <IconButton onClick={handleDeletePhoto} size="small">
           <DeleteIcon />
         </IconButton>
         <label htmlFor="file-upload">
@@ -91,7 +131,7 @@ const MemberWebcam = ({ photo, setPhoto }) => {
             variant="contained"
             component="span"
             startIcon={<AttachFileIcon />}
-            sx={{ ml: 1 }}
+            sx={{ ml: 1, fontSize: "0.75rem", padding: "6px 12px" }} // 버튼 크기 더 작게 설정
           >
             파일첨부
           </Button>

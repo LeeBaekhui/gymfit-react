@@ -1,15 +1,16 @@
-import React from "react";
 import Box from "@mui/material/Box";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import MemberLayout from "../components/members/MemberLayout"; // MemberLayout 컴포넌트 import
-import ScheduleForm from "../components/ScheduleManagement/ScheduleForm"; // ScheduleForm 컴포넌트 import
-import { useDrawerContext } from "./DrawerContext";
+import ScheduleForm from "../components/scheduleManagement/ScheduleForm"; // ScheduleForm 컴포넌트 import
+import { useDrawerContext } from "../layouts/DrawerContext";
+import GymsetLayout from "../components/gymSetting/GymsetLayout"; // GymsetLayout 컴포넌트 import
 
 const DrawerHeader = styled("div")(({ theme }) => ({
   display: "flex",
   alignItems: "center",
   justifyContent: "flex-end",
+  marginLeft: "400px",
   padding: theme.spacing(0, 1),
   ...theme.mixins.toolbar,
 }));
@@ -20,9 +21,11 @@ export default function MainContentLayout() {
   const renderContent = () => {
     switch (selectedMenu) {
       case "신규회원등록": // 신규회원등록 메뉴가 선택되었을 때
-      return <MemberLayout />;
+        return <MemberLayout />;
       case "레슨스케줄관리":
         return <ScheduleForm />;
+      case "설정": // 설정 메뉴가 선택되었을 때
+        return <GymsetLayout />;
       default:
         return (
           <Typography paragraph>{`Selected Menu: ${selectedMenu}`}</Typography>
@@ -35,8 +38,8 @@ export default function MainContentLayout() {
       component="main"
       sx={{
         flexGrow: 1,
-        width: "100vw", // 전체 너비
-        height: "100vh", // 전체 높이
+        width: "90%", // 전체 너비
+        height: "90%", // 전체 높이
         overflow: "auto", // 스크롤 가능하게
       }}
     >
