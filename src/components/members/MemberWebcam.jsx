@@ -1,12 +1,5 @@
-import { useState } from "react";
-import {
-  Box,
-  Button,
-  IconButton,
-  Typography,
-  Paper,
-  Grid,
-} from "@mui/material";
+import React, { useState, useEffect } from "react";
+import { Box, Button, IconButton, Typography, Paper, Tooltip } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import PhotoCamera from "@mui/icons-material/PhotoCamera";
 import Visibility from "@mui/icons-material/Visibility";
@@ -19,31 +12,58 @@ const Input = styled("input")({
   display: "none",
 });
 
+const photos = {
+  1: null,
+  2: null,
+  3: null,
+  BMI: null,
+};
+
 const MemberWebcam = ({ photo, setPhoto }) => {
   const [open, setOpen] = useState(false);
   const [showPhoto, setShowPhoto] = useState(true);
-  const [selectedPhoto, setSelectedPhoto] = useState(0);
-  const [photos, setPhotos] = useState([null, null, null, null]);
+  const [selectedPhoto, setSelectedPhoto] = useState(null);
+  const [aspectRatio, setAspectRatio] = useState('');
+  const [currentKey, setCurrentKey] = useState('1');
+
+  useEffect(() => {
+    const handleResize = () => {
+      if (selectedPhoto) {
+        const img = new Image();
+        img.src = selectedPhoto;
+        img.onload = () => {
+          const ratio = (img.width / img.height).toFixed(2);
+          setAspectRatio(`${(ratio * 100).toFixed(2)}%`);
+        };
+      }
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, [selectedPhoto]);
 
   const handleTogglePhoto = () => {
     setShowPhoto(!showPhoto);
   };
 
   const handleDeletePhoto = () => {
-    const updatedPhotos = [...photos];
-    updatedPhotos[selectedPhoto] = null;
-    setPhotos(updatedPhotos);
     setPhoto(null);
+    setSelectedPhoto(null);
+    photos[currentKey] = null;
   };
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     const reader = new FileReader();
     reader.onloadend = () => {
-      const updatedPhotos = [...photos];
-      updatedPhotos[selectedPhoto] = reader.result;
-      setPhotos(updatedPhotos);
       setPhoto(reader.result);
+      setSelectedPhoto(reader.result);
+      photos[currentKey] = reader.result;
+      const img = new Image();
+      img.src = reader.result;
+      img.onload = () => {
+        const ratio = (img.width / img.height).toFixed(2);
+        setAspectRatio(`${(ratio * 100).toFixed(2)}%`);
+      };
     };
     if (file) {
       reader.readAsDataURL(file);
@@ -51,75 +71,126 @@ const MemberWebcam = ({ photo, setPhoto }) => {
   };
 
   const handleCapture = (imageSrc) => {
-    const updatedPhotos = [...photos];
-    updatedPhotos[selectedPhoto] = imageSrc;
-    setPhotos(updatedPhotos);
     setPhoto(imageSrc);
+    setSelectedPhoto(imageSrc);
+    photos[currentKey] = imageSrc;
+    const img = new Image();
+    img.src = imageSrc;
+    img.onload = () => {
+      const ratio = (img.width / img.height).toFixed(2);
+      setAspectRatio(`${(ratio * 100).toFixed(2)}%`);
+    };
   };
 
-  const handlePhotoSelection = (index) => {
-    setSelectedPhoto(index);
-    setPhoto(photos[index]);
+  const handleSelectPhoto = (key) => {
+    setCurrentKey(key);
+    setSelectedPhoto(photos[key]);
+    if (photos[key]) {
+      const img = new Image();
+      img.src = photos[key];
+      img.onload = () => {
+        const ratio = (img.width / img.height).toFixed(2);
+        setAspectRatio(`${(ratio * 100).toFixed(2)}%`);
+      };
+    } else {
+      setAspectRatio('');
+    }
   };
 
   return (
     <Paper
       sx={{
         p: 2,
+        textAlign: "center",
+        height: { xs: 'auto', md: '90%' }, // 반응형 높이
+        width: { xs: '100%', sm: '80%', md: '80%', lg: '80%', xl: '100%' }, // 반응형 너비 5단계 설정
         display: "flex",
         flexDirection: "column",
+        justifyContent: "center",
         alignItems: "center",
+        mx: "auto", // 가로 중앙 정렬
+        my: { xs: 1, md: 2 } // 반응형 세로 여백
       }}
     >
       <Box
         sx={{
           width: "100%",
-          maxWidth: 350,
-          height: 270,
+          maxWidth: 500, // 사진 미리보기 크기 2레벨 크게
+          height: 280, // 사진 미리보기 크기 2레벨 크게
           backgroundColor: "#f0f0f0",
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
           mb: 2,
+          mx: "auto", // 가운데 정렬
+          position: "relative"
         }}
       >
-        {photo && showPhoto ? (
-          <img
-            src={photo}
-            alt="Captured"
-            style={{ width: "100%", height: "auto" }}
-          />
+        {selectedPhoto && showPhoto ? (
+          <>
+            <img
+              src={selectedPhoto}
+              alt="Captured"
+              style={{ width: "100%", height: "auto" }}
+            />
+            <Typography
+              variant="caption"
+              sx={{
+                position: "absolute",
+                top: 8,
+                right: 8,
+                backgroundColor: "rgba(0, 0, 0, 0.5)",
+                color: "white",
+                padding: "2px 8px",
+                borderRadius: "4px"
+              }}
+            >
+              {aspectRatio}
+            </Typography>
+          </>
         ) : (
-          <Typography>사진 미리보기</Typography>
+          <Typography sx={{ opacity: 0.5 }}>사진 미리보기</Typography>
         )}
       </Box>
-      <Box display="flex" justifyContent="center" alignItems="center" mb={2}>
-        {["1", "2", "3", "BMI"].map((label, index) => (
-          <Button
-            key={label}
-            onClick={() => handlePhotoSelection(index)}
-            sx={{ mx: 0.5, fontSize: "0.75rem", padding: "2px 6px" }} // 버튼 크기 더 작게 설정
-            variant={selectedPhoto === index ? "contained" : "outlined"}
-          >
-            {label}
-          </Button>
+      <Box display="flex" justifyContent="space-between" sx={{ width: '100%', maxWidth: 300, mb: 1 }}>
+        {['1', '2', '3', 'BMI'].map((label, index) => (
+          <Tooltip key={index} title={`${label} 사진 촬영 및 저장`}>
+            <Button
+              variant="outlined"
+              size="small"
+              sx={{ mx: 0.5, fontSize: '0.75rem', width: '60px' }} // 버튼을 1레벨 작게
+              onClick={() => handleSelectPhoto(label)}
+            >
+              {label}
+            </Button>
+          </Tooltip>
         ))}
       </Box>
-      <Box display="flex" justifyContent="center" alignItems="center">
+      <Box display="flex" justifyContent="center" alignItems="center" sx={{ mb: 0 }}>
         <Button
           variant="contained"
           startIcon={<PhotoCamera />}
           onClick={() => setOpen(true)}
-          sx={{ mr: 1, fontSize: "0.75rem", padding: "6px 12px" }} // 버튼 크기 더 작게 설정
+          sx={{ mr: 1, fontSize: '0.75rem' }} // 버튼을 1레벨 작게
         >
-          사진 촬영
+          촬영
         </Button>
-        <IconButton onClick={handleTogglePhoto} size="small">
-          {showPhoto ? <VisibilityOff /> : <Visibility />}
-        </IconButton>
-        <IconButton onClick={handleDeletePhoto} size="small">
-          <DeleteIcon />
-        </IconButton>
+        <Button
+          variant="contained"
+          startIcon={showPhoto ? <VisibilityOff /> : <Visibility />}
+          onClick={handleTogglePhoto}
+          sx={{ mr: 1, fontSize: '0.75rem' }} // 버튼을 1레벨 작게
+        >
+          {showPhoto ? "숨김" : "노출"}
+        </Button>
+        <Button
+          variant="contained"
+          startIcon={<DeleteIcon />}
+          onClick={handleDeletePhoto}
+          sx={{ mr: 1, fontSize: '0.75rem' }} // 버튼을 1레벨 작게
+        >
+          삭제
+        </Button>
         <label htmlFor="file-upload">
           <Input
             accept="image/*"
@@ -131,12 +202,13 @@ const MemberWebcam = ({ photo, setPhoto }) => {
             variant="contained"
             component="span"
             startIcon={<AttachFileIcon />}
-            sx={{ ml: 1, fontSize: "0.75rem", padding: "6px 12px" }} // 버튼 크기 더 작게 설정
+            sx={{ ml: 1, fontSize: '0.75rem' }} // 버튼을 1레벨 작게
           >
-            파일첨부
+            첨부
           </Button>
         </label>
       </Box>
+      
       <MemberWebcamModal
         open={open}
         onClose={() => setOpen(false)}

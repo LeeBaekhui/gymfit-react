@@ -7,16 +7,18 @@ import {
   Dialog,
   DialogActions,
   DialogContent,
-  DialogTitle,
   Paper,
   IconButton,
   Typography,
   AppBar,
   Toolbar,
   Slide,
+  Alert,
+  Collapse,
 } from "@mui/material";
 import PhotoCamera from "@mui/icons-material/PhotoCamera";
 import CloseIcon from "@mui/icons-material/Close";
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 
 // DraggablePaperComponent는 Dialog를 드래그 가능하게 만듭니다.
 const DraggablePaperComponent = (props) => {
@@ -38,19 +40,25 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 const MemberWebcamModal = ({ open, onClose, onCapture }) => {
   const webcamRef = useRef(null);
   const [photo, setPhoto] = useState(null);
-  const [captureMessage, setCaptureMessage] = useState("");
+  const [captureMessage, setCaptureMessage] = useState(false);
 
   const capture = () => {
     const imageSrc = webcamRef.current.getScreenshot();
     setPhoto(imageSrc);
     onCapture(imageSrc);
-    setCaptureMessage("촬영이 완료 되었습니다.");
+    setCaptureMessage(true);
+    setTimeout(() => setCaptureMessage(false), 3000); // 3초 후 메시지 숨기기
   };
 
   const handleClose = (event, reason) => {
     if (reason !== "backdropClick") {
       onClose();
     }
+  };
+
+  const handleApply = () => {
+    onCapture(photo);
+    onClose();
   };
 
   return (
@@ -88,35 +96,42 @@ const MemberWebcamModal = ({ open, onClose, onCapture }) => {
             width={480}
             height={360}
             style={{
-              marginBottom: "10px",
+              marginBottom: "12px",
               borderRadius: "8px",
               boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
             }}
           />
-          {captureMessage && (
-            <Typography variant="body1" color="success" sx={{ mt: 2 }}>
-              {captureMessage}
-            </Typography>
-          )}
         </Box>
       </DialogContent>
-      <DialogActions>
-        <Button
-          variant="contained"
-          startIcon={<PhotoCamera />}
-          onClick={capture}
-          sx={{ mx: 1 }}
-        >
-          촬영
-        </Button>
-        <Button
-          variant="contained"
-          color="secondary"
-          onClick={onClose}
-          sx={{ mx: 1 }}
-        >
-          적용
-        </Button>
+      <DialogActions sx={{ justifyContent: 'space-between' }}>
+        <Collapse in={captureMessage}>
+          <Alert
+            severity="success"
+            sx={{ visibility: captureMessage ? 'visible' : 'hidden', transition: 'visibility 0.5s', height: captureMessage ? '20px' : 0, 
+    overflow: 'hidden', display: 'flex', alignItems: 'center' }}
+          >
+            촬영이 완료 되었습니다.
+          </Alert>
+        </Collapse>
+        <Box display="flex" alignItems="center">
+          <Button
+            variant="contained"
+            startIcon={<PhotoCamera />}
+            onClick={capture}
+            sx={{ mx: 1 }}
+          >
+            촬영
+          </Button>
+          <Button
+            variant="contained"
+            color="secondary"
+            startIcon={<CheckCircleIcon />}
+            onClick={handleApply}
+            sx={{ mx: 1 }}
+          >
+            적용
+          </Button>
+        </Box>
       </DialogActions>
     </Dialog>
   );
