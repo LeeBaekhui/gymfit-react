@@ -1,3 +1,4 @@
+// src/layouts/DrawerLayout.jsx
 import React from "react";
 import { styled, useTheme } from "@mui/material/styles";
 import Divider from "@mui/material/Divider";
@@ -15,9 +16,9 @@ import GroupIcon from "@mui/icons-material/Group";
 import MailIcon from "@mui/icons-material/Mail";
 import MuiDrawer from "@mui/material/Drawer";
 import SettingsIcon from "@mui/icons-material/Settings";
-import Box from "@mui/material/Box"; // Box 컴포넌트 임포트
-import { useDrawerContext } from "../layouts/DrawerContext";
-import MainContentLayout from "./MainContentLayout"; // MainContentLayout 컴포넌트 import
+import Box from "@mui/material/Box";
+import { useDrawerContext } from "./DrawerContext";
+import MainContentLayout from "./MainContentLayout";
 
 const drawerWidth = 240;
 
@@ -113,15 +114,16 @@ export default function DrawerLayout() {
     handleMenuClick,
     openSubmenus,
     handleSubMenuClick,
+    handleOpenModal,
     setSelectedMenu,
   } = useDrawerContext();
 
   const handleOpenGymSetting = () => {
-    setSelectedMenu("설정");
+    handleOpenModal();
   };
 
   return (
-    <Box sx={{ display: "flex" }}>
+    <Box sx={{ display: "flex", height: "100vh", overflow: "hidden" }}>
       <Drawer variant="permanent" open={open}>
         <DrawerHeader>
           <IconButton onClick={handleDrawerClose}>
@@ -139,9 +141,9 @@ export default function DrawerLayout() {
               <ListItemButton
                 onClick={() => {
                   if (!open) {
-                    handleDrawerOpen(); // 서랍이 닫혀있을 때 열리게 하기
+                    handleDrawerOpen();
                   } else {
-                    handleMenuClick(menuItem.title); // 서랍이 열려있을 때는 메뉴 아이템 클릭 시 동작
+                    handleMenuClick(menuItem.title);
                   }
                 }}
               >
@@ -153,7 +155,7 @@ export default function DrawerLayout() {
                   )}
                 </ListItemIcon>
                 <ListItemText primary={menuItem.title} />
-                {open && // 서랍이 열려있을 때만 드롭다운 아이콘 표시
+                {open &&
                   (openSubmenus[menuItem.title] ? (
                     <ExpandLess />
                   ) : (
@@ -188,6 +190,12 @@ export default function DrawerLayout() {
           </ListItemButton>
         </List>
       </Drawer>
+      <Box
+        component="main"
+        sx={{ flexGrow: 1, p: 3, overflow: "auto", height: "100vh" }} // overflow와 height를 설정하여 스크롤바 문제 해결
+      >
+        <MainContentLayout /> {/* MainContentLayout 추가 */}
+      </Box>
     </Box>
   );
 }

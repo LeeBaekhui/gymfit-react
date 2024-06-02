@@ -38,8 +38,8 @@ export default function MainContentLayout() {
       component="main"
       sx={{
         flexGrow: 1,
-        width: "90%", // 전체 너비
-        height: "90%", // 전체 높이
+        width: "100%", // 전체 너비
+        height: "100%", // 전체 높이
         overflow: "auto", // 스크롤 가능하게
       }}
     >

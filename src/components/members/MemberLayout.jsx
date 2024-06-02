@@ -12,16 +12,16 @@ export default function MemberLayout() {
     <Box sx={{ mt: 2 }}>
       <Grid
         container
-        spacing={2} //* gap으로 두 컴포넌트 사이의 거리 조절 */}
+        spacing={2} // 두 컴포넌트 사이의 거리 조절
         justifyContent="center"
         alignItems="center"
       >
-        <Grid item xs={12} md={4}>
+        <Grid item xs={11} sm={8} md={6} lg={6}>
           <Box sx={{ p: 2 }}>
             <MemberWebcam photo={photo} setPhoto={setPhoto} />
           </Box>
         </Grid>
-        <Grid item xs={12} md={6}>
+        <Grid item xs={11} sm={8} md={6} lg={6}>
           <Box sx={{ p: 2 }}>
             <MemberForm photo={photo} setPhoto={setPhoto} />
           </Box>

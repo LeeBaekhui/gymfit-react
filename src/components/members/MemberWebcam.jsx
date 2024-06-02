@@ -25,6 +25,7 @@ const MemberWebcam = ({ photo, setPhoto }) => {
   const [selectedPhoto, setSelectedPhoto] = useState(null);
   const [aspectRatio, setAspectRatio] = useState('');
   const [currentKey, setCurrentKey] = useState('1');
+  const [selectedButton, setSelectedButton] = useState('1');
 
   useEffect(() => {
     const handleResize = () => {
@@ -84,6 +85,7 @@ const MemberWebcam = ({ photo, setPhoto }) => {
 
   const handleSelectPhoto = (key) => {
     setCurrentKey(key);
+    setSelectedButton(key); // 버튼 클릭 상태 설정
     setSelectedPhoto(photos[key]);
     if (photos[key]) {
       const img = new Image();
@@ -103,7 +105,7 @@ const MemberWebcam = ({ photo, setPhoto }) => {
         p: 2,
         textAlign: "center",
         height: { xs: 'auto', md: '90%' }, // 반응형 높이
-        width: { xs: '100%', sm: '80%', md: '80%', lg: '80%', xl: '100%' }, // 반응형 너비 5단계 설정
+        width: { xs: '60%', sm: '80%', md: '80%', lg: '85%', xl: '90%' }, // 반응형 너비 5단계 설정
         display: "flex",
         flexDirection: "column",
         justifyContent: "center",
@@ -116,7 +118,7 @@ const MemberWebcam = ({ photo, setPhoto }) => {
         sx={{
           width: "100%",
           maxWidth: 500, // 사진 미리보기 크기 2레벨 크게
-          height: 280, // 사진 미리보기 크기 2레벨 크게
+          height: 300, // 사진 미리보기 크기 2레벨 크게
           backgroundColor: "#f0f0f0",
           display: "flex",
           alignItems: "center",
@@ -131,7 +133,7 @@ const MemberWebcam = ({ photo, setPhoto }) => {
             <img
               src={selectedPhoto}
               alt="Captured"
-              style={{ width: "100%", height: "auto" }}
+              style={{ width: "80%", height: "auto" }}
             />
             <Typography
               variant="caption"
@@ -158,7 +160,12 @@ const MemberWebcam = ({ photo, setPhoto }) => {
             <Button
               variant="outlined"
               size="small"
-              sx={{ mx: 0.5, fontSize: '0.75rem', width: '60px' }} // 버튼을 1레벨 작게
+               sx={{
+                mx: 0.5,
+                fontSize: '0.75rem',
+                width: '50px',
+                backgroundColor: selectedButton === label ? "lightblue" : "inherit" // 버튼 배경색 변경
+              }}
               onClick={() => handleSelectPhoto(label)}
             >
               {label}
