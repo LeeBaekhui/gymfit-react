@@ -1,34 +1,27 @@
-// src/components/gymSetting/GymSettingModal.jsx
+// 경로: src\components\gymSetting\GymSettingModal .jsx
+
 import React from "react";
 import Modal from "@mui/material/Modal";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
-import Draggable from "react-draggable"; // Draggable 기능을 추가하기 위해 react-draggable 라이브러리 사용
 import Paper from "@mui/material/Paper";
-import Divider from "@mui/material/Divider"; // Divider 컴포넌트 import
-import { useDrawerContext } from "../../layouts/DrawerContext"; // 경로를 프로젝트 구조에 맞게 조정
-import GymsetLayout from "./GymsetLayout"; // GymsetLayout 컴포넌트 불러오기
+import Divider from "@mui/material/Divider";
+import { useDrawerContext } from "../../layouts/DrawerContext";
+import GymsetLayout from "./GymsetLayout";
 
 const style = {
   position: 'absolute',
   top: '50%',
   left: '50%',
-  transform: 'translate(-50%, -50%)',
+  transform: 'translate(-50%, -50%)', // 모달창 위치 설정
   width: '85vw', // 모달창 너비를 크게 설정
   height: '85vh', // 모달창 높이를 크게 설정
   bgcolor: 'background.paper',
   boxShadow: 24,
   p: 0, // 패딩 제거
-};
-
-const DraggablePaperComponent = (props) => {
-  return (
-    <Draggable handle="#draggable-dialog-title" cancel={'[class*="MuiDialogContent-root"]'}>
-      <Paper {...props} style={{ borderRadius: '8px', overflow: 'hidden' }} />
-    </Draggable>
-  );
+  borderRadius: '8px', // 모서리를 둥글게 설정
 };
 
 const GymSettingModal = () => {
@@ -38,9 +31,8 @@ const GymSettingModal = () => {
     <Modal
       open={openModal}
       onClose={handleCloseModal}
-      aria-labelledby="draggable-dialog-title"
+      aria-labelledby="modal-title"
       aria-describedby="modal-description"
-      PaperComponent={DraggablePaperComponent} // DraggablePaperComponent를 PaperComponent로 설정
     >
       <Box sx={style}>
         <Box
@@ -51,8 +43,9 @@ const GymSettingModal = () => {
             bgcolor: 'primary.main',
             color: 'primary.contrastText',
             p: 2,
+            cursor: 'move',
           }}
-          id="draggable-dialog-title"
+          id="modal-title"
         >
           <Typography variant="h6" component="div">
             설정
@@ -68,7 +61,7 @@ const GymSettingModal = () => {
           </IconButton>
         </Box>
         <Divider />
-        <Box sx={{ mt: 2, height: 'calc(100% - 56px)', overflow: 'hidden' }}>
+        <Box sx={{ mt: 2, height: 'calc(100% - 56px)', overflow: 'auto' }}>
           <GymsetLayout /> {/* GymsetLayout 컴포넌트 포함 */}
         </Box>
       </Box>

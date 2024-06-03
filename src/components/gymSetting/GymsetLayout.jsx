@@ -1,15 +1,18 @@
-// src/components/gymSetting/GymsetLayout.jsx
+// 경로: src\components\gymSetting\GymsetLayout.jsx
+
 import React, { useState } from 'react';
-import { Box, Typography, List, ListItem, ListItemButton, ListItemText, Divider, TextField, MenuItem, FormControlLabel, Switch, Paper } from '@mui/material';
+import { Box, Typography, List, ListItem, ListItemButton, ListItemText, Divider, Paper } from '@mui/material';
+import FacilityMenu from './gymSettingDetails/gymFacilitySetting/FacilityMenu';  // FacilityMenu 컴포넌트 임포트
+import LockerSetMenu from './gymSettingDetails/gymlockerSetting/LockerSetMenu'; // LockerSetMenu 컴포넌트 임포트
 
 const menuItems = [
-  { title: '락커관리', content: '락커관리 내용' },
-  { title: '이용권상품관리', content: '이용권상품관리 내용' },
-  { title: '대여상품관리', content: '대여상품관리 내용' },
-  { title: '센터정보관리', content: '센터정보관리 내용' },
-  { title: '터치모니터관리', content: '터치모니터관리 내용' },
-  { title: '회원참여관리', content: '회원참여관리 내용' },
-  { title: '시스템관리', content: '시스템관리 내용' },
+  { title: '락커설정', content: '락커설정 내용' },
+  { title: '이용권상품설정', content: '이용권상품설정 내용' },
+  { title: '대여상품설정', content: '대여상품설정 내용' },
+  { title: '센터정보설정', content: '센터정보설정 내용' },
+  { title: '터치모니터설정', content: '터치모니터설정 내용' },
+  { title: '회원참여설정', content: '회원참여설정 내용' },
+  { title: '시스템설정', content: '시스템설정 내용' },
 ];
 
 const GymsetLayout = () => {
@@ -42,30 +45,17 @@ const GymsetLayout = () => {
         <Typography variant="h4" gutterBottom>
           {selectedMenu.title}
         </Typography>
-        <Typography variant="body1" gutterBottom>
-          {selectedMenu.content}
-        </Typography>
-        {/* 추가적인 설정 내용을 여기에 추가할 수 있습니다. 예시로 몇 가지 컨트롤을 추가합니다. */}
-        <Box sx={{ mt: 3 }}>
-          <FormControlLabel control={<Switch />} label="기능 활성화" />
-          <TextField
-            select
-            label="옵션 선택"
-            value=""
-            onChange={() => {}}
-            fullWidth
-            sx={{ mt: 2 }}
-          >
-            <MenuItem value={10}>옵션 1</MenuItem>
-            <MenuItem value={20}>옵션 2</MenuItem>
-            <MenuItem value={30}>옵션 3</MenuItem>
-          </TextField>
-          <TextField
-            label="텍스트 입력"
-            fullWidth
-            sx={{ mt: 2 }}
-          />
-        </Box>
+        {selectedMenu.title === '이용권상품설정' ? (
+        <FacilityMenu />
+      ) : selectedMenu.title === '락커설정' ? (
+        <LockerSetMenu />
+      ) : (
+          <>
+            <Typography variant="body1" gutterBottom>
+              {selectedMenu.content}
+            </Typography>
+          </>
+        )}
       </Paper>
     </Box>
   );
