@@ -1,6 +1,4 @@
-// 경로: src\components\gymSetting\gymSettingDetails\gymlockerSetting\LockerPaySet.jsx
-
-import React, { useState } from 'react';
+import { useState } from "react";
 import {
   Box,
   Button,
@@ -19,17 +17,17 @@ import {
   TableHead,
   TableRow,
   Paper,
-} from '@mui/material';
-import { Edit, Delete } from '@mui/icons-material';
+} from "@mui/material";
+import { Edit, Delete } from "@mui/icons-material";
 
-const LockerPaySet = () => {
-  const [lockerCategory, setLockerCategory] = useState('');
-  const [lockerName, setLockerName] = useState('');
-  const [term, setTerm] = useState('');
-  const [margin, setMargin] = useState('');
-  const [price, setPrice] = useState('');
-  const [lateFee, setLateFee] = useState('');
-  const [lateFeeState, setLateFeeState] = useState('');
+const LockerPaySet = ({ lockerCategories = [] }) => {
+  const [lockerCategory, setLockerCategory] = useState("");
+  const [lockerName, setLockerName] = useState("");
+  const [term, setTerm] = useState("");
+  const [margin, setMargin] = useState("");
+  const [price, setPrice] = useState("");
+  const [lateFee, setLateFee] = useState("");
+  const [lateFeeState, setLateFeeState] = useState("");
   const [lockers, setLockers] = useState([]);
 
   const handleFormSubmit = (event) => {
@@ -46,21 +44,21 @@ const LockerPaySet = () => {
     };
     setLockers([...lockers, newLocker]);
     // Clear form fields
-    setLockerCategory('');
-    setLockerName('');
-    setTerm('');
-    setMargin('');
-    setPrice('');
-    setLateFee('');
-    setLateFeeState('');
+    setLockerCategory("");
+    setLockerName("");
+    setTerm("");
+    setMargin("");
+    setPrice("");
+    setLateFee("");
+    setLateFeeState("");
   };
 
   const handleDelete = (id) => {
-    setLockers(lockers.filter(locker => locker.id !== id));
+    setLockers(lockers.filter((locker) => locker.id !== id));
   };
 
   const handleEdit = (id) => {
-    const lockerToEdit = lockers.find(locker => locker.id === id);
+    const lockerToEdit = lockers.find((locker) => locker.id === id);
     setLockerCategory(lockerToEdit.category);
     setLockerName(lockerToEdit.name);
     setTerm(lockerToEdit.term);
@@ -68,17 +66,24 @@ const LockerPaySet = () => {
     setPrice(lockerToEdit.price);
     setLateFee(lockerToEdit.lateFee);
     setLateFeeState(lockerToEdit.lateFeeState);
-    setLockers(lockers.filter(locker => locker.id !== id));
+    setLockers(lockers.filter((locker) => locker.id !== id));
   };
 
   return (
     <Box sx={{ p: 1 }}>
-      <Typography variant="h6" gutterBottom>락커 결제 설정</Typography>
+      <Typography variant="h6" gutterBottom>
+        락커 결제 설정
+      </Typography>
       <Box component="form" onSubmit={handleFormSubmit} sx={{ mb: 2 }}>
         <Grid container spacing={2}>
           <Grid item xs={12} sm={6}>
             <FormControl fullWidth>
-              <InputLabel id="locker-category-select-label" sx={{ textAlign: 'center' }}>락커분류선택</InputLabel>
+              <InputLabel
+                id="locker-category-select-label"
+                sx={{ textAlign: "center" }}
+              >
+                락커분류선택
+              </InputLabel>
               <Select
                 labelId="locker-category-select-label"
                 id="u_ridx"
@@ -87,9 +92,14 @@ const LockerPaySet = () => {
                 onChange={(e) => setLockerCategory(e.target.value)}
                 size="small"
               >
-                <MenuItem value=""><em>락커분류를 선택하세요</em></MenuItem>
-                <MenuItem value="헬스락커">헬스락커</MenuItem>
-                <MenuItem value="골프락커">골프락커</MenuItem>
+                <MenuItem value="">
+                  <em>락커분류를 선택하세요</em>
+                </MenuItem>
+                {lockerCategories.map((category, index) => (
+                  <MenuItem key={index} value={category.name}>
+                    {category.name}
+                  </MenuItem>
+                ))}
               </Select>
             </FormControl>
           </Grid>
@@ -106,7 +116,9 @@ const LockerPaySet = () => {
           </Grid>
           <Grid item xs={12} sm={6}>
             <FormControl fullWidth>
-              <InputLabel id="term-select-label" sx={{ textAlign: 'center' }}>기간설정</InputLabel>
+              <InputLabel id="term-select-label" sx={{ textAlign: "center" }}>
+                기간설정
+              </InputLabel>
               <Select
                 labelId="term-select-label"
                 id="u_term"
@@ -115,8 +127,10 @@ const LockerPaySet = () => {
                 onChange={(e) => setTerm(e.target.value)}
                 size="small"
               >
-                {[...Array(12).keys()].map(i => (
-                  <MenuItem key={i + 1} value={i + 1}>{i + 1}개월</MenuItem>
+                {[...Array(12).keys()].map((i) => (
+                  <MenuItem key={i + 1} value={i + 1}>
+                    {i + 1}개월
+                  </MenuItem>
                 ))}
               </Select>
             </FormControl>
@@ -158,7 +172,12 @@ const LockerPaySet = () => {
               sx={{ mr: 2 }}
             />
             <FormControl fullWidth>
-              <InputLabel id="late-fee-state-label" sx={{ textAlign: 'center' }}>사용 여부</InputLabel>
+              <InputLabel
+                id="late-fee-state-label"
+                sx={{ textAlign: "center" }}
+              >
+                사용 여부
+              </InputLabel>
               <Select
                 labelId="late-fee-state-label"
                 id="late_fee_state"
@@ -174,7 +193,9 @@ const LockerPaySet = () => {
           </Grid>
         </Grid>
         <Box mt={2} textAlign="center">
-          <Button variant="contained" color="primary" type="submit">만들기</Button>
+          <Button variant="contained" color="primary" type="submit">
+            만들기
+          </Button>
         </Box>
       </Box>
       <TableContainer component={Paper}>
@@ -200,12 +221,23 @@ const LockerPaySet = () => {
                 <TableCell>{locker.term}개월</TableCell>
                 <TableCell>{locker.margin} 원</TableCell>
                 <TableCell>{locker.price} 원</TableCell>
-                <TableCell>{locker.lateFee} 원 ({locker.lateFeeState === "1" ? "사용" : "사용안함"})</TableCell>
                 <TableCell>
-                  <IconButton size="small" color="primary" onClick={() => handleEdit(locker.id)}>
+                  {locker.lateFee} 원 (
+                  {locker.lateFeeState === "1" ? "사용" : "사용안함"})
+                </TableCell>
+                <TableCell>
+                  <IconButton
+                    size="small"
+                    color="primary"
+                    onClick={() => handleEdit(locker.id)}
+                  >
                     <Edit fontSize="small" />
                   </IconButton>
-                  <IconButton size="small" color="secondary" onClick={() => handleDelete(locker.id)}>
+                  <IconButton
+                    size="small"
+                    color="secondary"
+                    onClick={() => handleDelete(locker.id)}
+                  >
                     <Delete fontSize="small" />
                   </IconButton>
                 </TableCell>

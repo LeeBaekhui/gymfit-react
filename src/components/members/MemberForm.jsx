@@ -76,7 +76,9 @@ const MemberForm = ({ existingMember, photo, setPhoto }) => {
   useEffect(() => {
     if (member.height && member.weight) {
       const heightInMeters = member.height / 100;
-      const bmi = (member.weight / (heightInMeters * heightInMeters)).toFixed(2);
+      const bmi = (member.weight / (heightInMeters * heightInMeters)).toFixed(
+        2
+      );
       setMember((prevMember) => ({ ...prevMember, bmi }));
     }
   }, [member.height, member.weight]);
@@ -117,14 +119,14 @@ const MemberForm = ({ existingMember, photo, setPhoto }) => {
   return (
     <Paper
       sx={{
-        p: 2,
+        p: 1,
         display: "flex",
         flexDirection: "column",
         justifyContent: "center",
       }}
     >
       <form onSubmit={handleSubmit}>
-        <Grid container spacing={2} sx={{ maxWidth: "1000px", margin: "0 auto" }}>
+        <Grid container spacing={2} sx={{ maxWidth: "auto", margin: "0 auto" }}>
           <Grid item xs={12} sm={6} md={4}>
             <TextField
               id="name"
@@ -333,7 +335,7 @@ const MemberForm = ({ existingMember, photo, setPhoto }) => {
               sx={{ width: "100%" }}
             />
           </Grid>
-          <Grid item xs={12} sm={6} md={4}>
+          <Grid item xs={12} sm={6} md={6}>
             <TextField
               id="postalCode"
               name="postalCode"
@@ -357,7 +359,7 @@ const MemberForm = ({ existingMember, photo, setPhoto }) => {
               sx={{ width: "50%" }}
             />
           </Grid>
-          <Grid item xs={12} sm={6} md={8}>
+          <Grid item xs={12} sm={6} md={7}>
             <TextField
               id="address"
               name="address"
@@ -372,7 +374,7 @@ const MemberForm = ({ existingMember, photo, setPhoto }) => {
               sx={{ width: "100%" }}
             />
           </Grid>
-          <Grid item xs={12} sm={6} md={4}>
+          <Grid item xs={12} sm={6} md={3}>
             <TextField
               id="addressDetail"
               name="addressDetail"
@@ -387,21 +389,7 @@ const MemberForm = ({ existingMember, photo, setPhoto }) => {
               sx={{ width: "100%" }}
             />
           </Grid>
-          <Grid item xs={12} sm={6} md={4}>
-            <TextField
-              id="addressDetail2"
-              name="addressDetail2"
-              label="상세주소 2"
-              fullWidth
-              value={member.addressDetail2}
-              onChange={handleChange}
-              InputProps={{ style: { fontSize: 14 } }}
-              InputLabelProps={{ style: { fontSize: 14 } }}
-              size="small"
-              disabled={!isEditable}
-              sx={{ width: "100%" }}
-            />
-          </Grid>
+
           <Grid item xs={12}>
             <TextField
               id="memo"
@@ -422,7 +410,12 @@ const MemberForm = ({ existingMember, photo, setPhoto }) => {
           </Grid>
           <Grid item xs={12}>
             {isEditable ? (
-              <Button type="submit" variant="contained" color="primary" fullWidth>
+              <Button
+                type="submit"
+                variant="contained"
+                color="primary"
+                fullWidth
+              >
                 저장
               </Button>
             ) : (

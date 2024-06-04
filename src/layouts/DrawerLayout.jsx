@@ -1,4 +1,3 @@
-// src/layouts/DrawerLayout.jsx
 import React from "react";
 import { styled, useTheme } from "@mui/material/styles";
 import Divider from "@mui/material/Divider";
@@ -14,6 +13,11 @@ import ExpandLess from "@mui/icons-material/ExpandLess";
 import ExpandMore from "@mui/icons-material/ExpandMore";
 import GroupIcon from "@mui/icons-material/Group";
 import MailIcon from "@mui/icons-material/Mail";
+import SmsIcon from "@mui/icons-material/Sms"; // 문자발송관리
+import DoorSlidingIcon from "@mui/icons-material/DoorSliding"; // 신발장 임포트
+import EditCalendarIcon from "@mui/icons-material/EditCalendar"; // 레슨예약관리
+import ReceiptLongIcon from "@mui/icons-material/ReceiptLong"; // 회계정산관리
+import ManageAccountsIcon from "@mui/icons-material/ManageAccounts"; // 고객관리
 import MuiDrawer from "@mui/material/Drawer";
 import SettingsIcon from "@mui/icons-material/Settings";
 import Box from "@mui/material/Box";
@@ -70,7 +74,7 @@ const Drawer = styled(MuiDrawer, {
 
 const menuItems = [
   {
-    title: "회원출관리",
+    title: "회원관리",
     items: [
       "회원출석현황",
       "회원조회",
@@ -96,7 +100,7 @@ const menuItems = [
     items: ["매출내역", "지출내역", "정산내역", "직정산"],
   },
   {
-    title: "라커관리",
+    title: "락커관리",
     items: [],
   },
   {
@@ -148,14 +152,25 @@ export default function DrawerLayout() {
                 }}
               >
                 <ListItemIcon>
-                  {menuItem.title === "회원출관리" ? (
+                  {menuItem.title === "회원관리" ? (
                     <GroupIcon />
+                  ) : menuItem.title === "레슨예약관리" ? (
+                    <EditCalendarIcon />
+                  ) : menuItem.title === "문자발송관리" ? (
+                    <SmsIcon />
+                  ) : menuItem.title === "락커관리" ? (
+                    <DoorSlidingIcon />
+                  ) : menuItem.title === "회계정산관리" ? (
+                    <ReceiptLongIcon />
+                  ) : menuItem.title === "고객관리" ? (
+                    <ManageAccountsIcon />
                   ) : (
                     <MailIcon />
                   )}
                 </ListItemIcon>
                 <ListItemText primary={menuItem.title} />
                 {open &&
+                  menuItem.title !== "락커관리" && // "락커관리" 메뉴에 대한 아이콘 표시 제거
                   (openSubmenus[menuItem.title] ? (
                     <ExpandLess />
                   ) : (
