@@ -4,7 +4,7 @@ import Box from "@mui/material/Box";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import MemberLayout from "../components/members/MemberLayout"; // MemberLayout 컴포넌트 import
-import ScheduleForm from "../components/scheduleManagement/ScheduleForm"; // ScheduleForm 컴포넌트 import
+import ScheduleForm from "../components/ScheduleManagement/ScheduleForm"; // ScheduleForm 컴포넌트 import
 import { useDrawerContext } from "../layouts/DrawerContext";
 import GymsetLayout from "../components/gymSetting/GymsetLayout"; // GymsetLayout 컴포넌트 import
 import GymLockerManagement from "../components/gymSetting/gymSettingDetails/gymlockerSetting/GymLockerMangment"; // GymLockerManagement 컴포넌트 import
@@ -28,10 +28,9 @@ export default function MainContentLayout() {
       case "레슨스케줄관리":
         return <ScheduleForm />;
       case "락커관리": // 락커관리 메뉴가 선택되었을 때
-        return <GymsetLayout />;
+        return <GymLockerManagement />; // 수정된 부분
       case "설정": // 설정 메뉴가 선택되었을 때
         return <GymsetLayout />;
-
       default:
         return (
           <Typography paragraph>{`Selected Menu: ${selectedMenu}`}</Typography>
