@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import axios from "axios";
 import {
   Box,
   Button,
@@ -21,34 +22,40 @@ import {
 
 const LokerClassFicationSet = ({ onLockerAdd }) => {
   const [lockerCategory, setLockerCategory] = useState("");
-  const [num1, setNum1] = useState("");
-  const [num2, setNum2] = useState("");
+  const [lockerStartNumber, setLockerStartNumber] = useState("");
+  const [lockerEndNumber, setLockerEndNumber] = useState("");
   const [open, setOpen] = useState(false);
   const [selectedIdx, setSelectedIdx] = useState(null);
   const [lockers, setLockers] = useState([
-    { name: "남자락커", range: "1~100" },
-    { name: "여자락커", range: "101~150" },
+    { category: "남자락커", lockerStartNumber: "1", lockerEndNumber: "100" },
+    { category: "여자락커", lockerStartNumber: "101", lockerEndNumber: "150" },
   ]);
 
-  const handleFormSubmit = (event) => {
+  const handleFormSubmit = async (event) => {
     event.preventDefault();
-    if (!lockerCategory || !num1 || !num2) {
+    if (!lockerCategory || !lockerStartNumber || !lockerEndNumber) {
       alert("모든 필드를 입력해 주세요.");
       return;
     }
 
     const newLocker = {
-      name: lockerCategory,
-      range: `${num1}~${num2}`,
+      category: lockerCategory,
+      lockerStartNumber,
+      lockerEndNumber,
     };
 
-    setLockers([...lockers, newLocker]);
-    setLockerCategory("");
-    setNum1("");
-    setNum2("");
+    try {
+      const response = await axios.post("/api/lockers", newLocker);
+      setLockers([...lockers, response.data]);
+      setLockerCategory("");
+      setLockerStartNumber("");
+      setLockerEndNumber("");
 
-    if (onLockerAdd) {
-      onLockerAdd(newLocker);
+      if (onLockerAdd) {
+        onLockerAdd(response.data);
+      }
+    } catch (error) {
+      console.error("There was an error creating the locker!", error);
     }
   };
 
@@ -57,31 +64,49 @@ const LokerClassFicationSet = ({ onLockerAdd }) => {
     setOpen(true);
   };
 
-  const confirmDelete = () => {
-    setLockers(lockers.filter((_, index) => index !== selectedIdx));
-    setOpen(false);
+  const confirmDelete = async () => {
+    const lockerToDelete = lockers[selectedIdx];
+    try {
+      await axios.delete(`/api/lockers/${lockerToDelete.id}`);
+      setLockers(lockers.filter((_, index) => index !== selectedIdx));
+      setOpen(false);
+    } catch (error) {
+      console.error("There was an error deleting the locker!", error);
+    }
   };
 
   const handleEdit = (idx) => {
     const locker = lockers[idx];
-    setLockerCategory(locker.name);
-    const [start, end] = locker.range.split("~");
-    setNum1(start);
-    setNum2(end);
+    setLockerCategory(locker.category);
+    setLockerStartNumber(locker.lockerStartNumber);
+    setLockerEndNumber(locker.lockerEndNumber);
     setSelectedIdx(idx);
   };
 
-  const confirmEdit = () => {
-    const updatedLockers = lockers.map((locker, index) =>
-      index === selectedIdx
-        ? { name: lockerCategory, range: `${num1}~${num2}` }
-        : locker
-    );
-    setLockers(updatedLockers);
-    setLockerCategory("");
-    setNum1("");
-    setNum2("");
-    setSelectedIdx(null);
+  const confirmEdit = async () => {
+    const lockerToUpdate = lockers[selectedIdx];
+    const updatedLocker = {
+      category: lockerCategory,
+      lockerStartNumber,
+      lockerEndNumber,
+    };
+
+    try {
+      const response = await axios.put(
+        `/api/lockers/${lockerToUpdate.id}`,
+        updatedLocker
+      );
+      const updatedLockers = lockers.map((locker, index) =>
+        index === selectedIdx ? response.data : locker
+      );
+      setLockers(updatedLockers);
+      setLockerCategory("");
+      setLockerStartNumber("");
+      setLockerEndNumber("");
+      setSelectedIdx(null);
+    } catch (error) {
+      console.error("There was an error updating the locker!", error);
+    }
   };
 
   return (
@@ -100,6 +125,7 @@ const LokerClassFicationSet = ({ onLockerAdd }) => {
               fullWidth
               size="small"
               label="락커분류"
+              id="category"
               placeholder="예) 헬스락커, 골프락커, 남자락커, 여자락커 등"
               value={lockerCategory}
               onChange={(e) => setLockerCategory(e.target.value)}
@@ -111,9 +137,10 @@ const LokerClassFicationSet = ({ onLockerAdd }) => {
               fullWidth
               size="small"
               label="번호설정 시작"
+              id="lockerStartNumber"
               placeholder="예) 숫자입력"
-              value={num1}
-              onChange={(e) => setNum1(e.target.value)}
+              value={lockerStartNumber}
+              onChange={(e) => setLockerStartNumber(e.target.value)}
               required
               type="number"
             />
@@ -123,9 +150,10 @@ const LokerClassFicationSet = ({ onLockerAdd }) => {
               fullWidth
               size="small"
               label="번호설정 끝"
+              id="lockerEndNumber"
               placeholder="예) 숫자입력"
-              value={num2}
-              onChange={(e) => setNum2(e.target.value)}
+              value={lockerEndNumber}
+              onChange={(e) => setLockerEndNumber(e.target.value)}
               required
               type="number"
             />
@@ -150,7 +178,10 @@ const LokerClassFicationSet = ({ onLockerAdd }) => {
               <TableCell sx={{ fontWeight: "bold" }}>연번</TableCell>
               <TableCell sx={{ fontWeight: "bold" }}>락커분류명</TableCell>
               <TableCell sx={{ fontWeight: "bold", textAlign: "center" }}>
-                범위
+                번호설정 시작
+              </TableCell>
+              <TableCell sx={{ fontWeight: "bold", textAlign: "center" }}>
+                번호설정 끝
               </TableCell>
               <TableCell sx={{ fontWeight: "bold", textAlign: "center" }}>
                 관리
@@ -161,9 +192,12 @@ const LokerClassFicationSet = ({ onLockerAdd }) => {
             {lockers.map((locker, index) => (
               <TableRow key={index}>
                 <TableCell>{index + 1}</TableCell>
-                <TableCell>{locker.name}</TableCell>
+                <TableCell>{locker.category}</TableCell>
                 <TableCell sx={{ textAlign: "center" }}>
-                  {locker.range}
+                  {locker.lockerStartNumber}
+                </TableCell>
+                <TableCell sx={{ textAlign: "center" }}>
+                  {locker.lockerEndNumber}
                 </TableCell>
                 <TableCell sx={{ textAlign: "center" }}>
                   <Button

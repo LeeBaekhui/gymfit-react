@@ -4,9 +4,12 @@ import react from '@vitejs/plugin-react';
 
 export default defineConfig({
   plugins: [react()],
-  server: {
-    hmr: {
-      overlay: false, // 오류 오버레이 비활성화
-    },
+  optimizeDeps: {
+    include: [
+      '@mui/material',
+      '@mui/icons-material',
+      '@mui/x-date-pickers',
+      'date-fns',
+    ],
   },
 });

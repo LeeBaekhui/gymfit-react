@@ -216,7 +216,13 @@ export default function DrawerLayout() {
       {/* MainContentLayout 컴포넌트 */}
       <Box
         component="main"
-        sx={{ flexGrow: 1, p: 3, overflow: "auto", height: "100vh" }} // overflow와 height를 설정하여 스크롤바 문제 해결
+        sx={{
+          flexGrow: 1,
+          p: 3,
+          overflow: "auto",
+          width: "100vw",
+          height: "100vh",
+        }} // overflow와 height를 설정하여 스크롤바 문제 해결
       >
         <MainContentLayout /> {/* MainContentLayout 추가 */}
       </Box>
