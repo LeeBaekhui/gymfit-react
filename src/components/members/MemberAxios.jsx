@@ -1,4 +1,4 @@
-import api from "../../api";
+import Api from "../../Api";
 
 // 회원 생성
 export const createMember = async (member) => {

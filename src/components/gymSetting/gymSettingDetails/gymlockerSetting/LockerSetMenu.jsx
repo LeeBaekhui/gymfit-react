@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { Box, Button, Typography, Grid, Paper } from "@mui/material";
-import LokerClassFicationSet from "./LokerClassFicationSet.jsx";
+import LockerCategorySet from "./LockerCategorySet.jsx";
 import LockerPaySet from "./LockerPaySet.jsx";
 import LockerPositionSet from "./LockerPositionSet.jsx";
 import LockerProductsView from "./LockerProductsView.jsx";
@@ -39,7 +39,7 @@ const LockerMenu = () => {
               락커결제설정
             </Button>
             <Button
-              onClick={() => handleButtonClick("LokerClassFicationSet")}
+              onClick={() => handleButtonClick("LockerCategorySet")}
               variant={
                 activeComponent === "classification" ? "contained" : "outlined"
               }
@@ -53,9 +53,7 @@ const LockerMenu = () => {
             {activeComponent === "LockerProductsView" && <LockerProductsView />}
             {activeComponent === "LockerPositionSet" && <LockerPositionSet />}
             {activeComponent === "LockerPaySet" && <LockerPaySet />}
-            {activeComponent === "LokerClassFicationSet" && (
-              <LokerClassFicationSet />
-            )}
+            {activeComponent === "LockerCategorySet" && <LockerCategorySet />}
           </Paper>
         </Grid>
       </Grid>

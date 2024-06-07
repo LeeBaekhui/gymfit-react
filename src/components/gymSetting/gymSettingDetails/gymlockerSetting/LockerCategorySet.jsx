@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import axios from "axios";
+import React, { useState, useEffect } from "react";
+import Api from "../../../../Api"; // Api 컴포넌트 가져오기
 import {
   Box,
   Button,
@@ -20,16 +20,26 @@ import {
   Paper,
 } from "@mui/material";
 
-const LokerClassFicationSet = ({ onLockerAdd }) => {
+const LockerCategorySet = ({ onLockerAdd }) => {
   const [lockerCategory, setLockerCategory] = useState("");
   const [lockerStartNumber, setLockerStartNumber] = useState("");
   const [lockerEndNumber, setLockerEndNumber] = useState("");
   const [open, setOpen] = useState(false);
   const [selectedIdx, setSelectedIdx] = useState(null);
-  const [lockers, setLockers] = useState([
-    { category: "남자락커", lockerStartNumber: "1", lockerEndNumber: "100" },
-    { category: "여자락커", lockerStartNumber: "101", lockerEndNumber: "150" },
-  ]);
+  const [lockers, setLockers] = useState([]);
+
+  useEffect(() => {
+    const fetchLockers = async () => {
+      try {
+        const response = await Api.get("/lockers");
+        setLockers(response.data);
+      } catch (error) {
+        console.error("There was an error fetching the lockers!", error);
+      }
+    };
+
+    fetchLockers();
+  }, []);
 
   const handleFormSubmit = async (event) => {
     event.preventDefault();
@@ -40,12 +50,12 @@ const LokerClassFicationSet = ({ onLockerAdd }) => {
 
     const newLocker = {
       category: lockerCategory,
-      lockerStartNumber,
-      lockerEndNumber,
+      lockerStartNumber: parseInt(lockerStartNumber, 10),
+      lockerEndNumber: parseInt(lockerEndNumber, 10),
     };
 
     try {
-      const response = await axios.post("/api/lockers", newLocker);
+      const response = await Api.post("/lockers", newLocker);
       setLockers([...lockers, response.data]);
       setLockerCategory("");
       setLockerStartNumber("");
@@ -67,7 +77,7 @@ const LokerClassFicationSet = ({ onLockerAdd }) => {
   const confirmDelete = async () => {
     const lockerToDelete = lockers[selectedIdx];
     try {
-      await axios.delete(`/api/lockers/${lockerToDelete.id}`);
+      await Api.delete(`/lockers/${lockerToDelete.id}`);
       setLockers(lockers.filter((_, index) => index !== selectedIdx));
       setOpen(false);
     } catch (error) {
@@ -84,16 +94,18 @@ const LokerClassFicationSet = ({ onLockerAdd }) => {
   };
 
   const confirmEdit = async () => {
+    if (selectedIdx === null) return;
+
     const lockerToUpdate = lockers[selectedIdx];
     const updatedLocker = {
       category: lockerCategory,
-      lockerStartNumber,
-      lockerEndNumber,
+      lockerStartNumber: parseInt(lockerStartNumber, 10),
+      lockerEndNumber: parseInt(lockerEndNumber, 10),
     };
 
     try {
-      const response = await axios.put(
-        `/api/lockers/${lockerToUpdate.id}`,
+      const response = await Api.put(
+        `/lockers/${lockerToUpdate.id}`,
         updatedLocker
       );
       const updatedLockers = lockers.map((locker, index) =>
@@ -125,7 +137,7 @@ const LokerClassFicationSet = ({ onLockerAdd }) => {
               fullWidth
               size="small"
               label="락커분류"
-              id="category"
+              id="lockerCategory"
               placeholder="예) 헬스락커, 골프락커, 남자락커, 여자락커 등"
               value={lockerCategory}
               onChange={(e) => setLockerCategory(e.target.value)}
@@ -136,7 +148,7 @@ const LokerClassFicationSet = ({ onLockerAdd }) => {
             <TextField
               fullWidth
               size="small"
-              label="번호설정 시작"
+              label="시작번호 설정"
               id="lockerStartNumber"
               placeholder="예) 숫자입력"
               value={lockerStartNumber}
@@ -149,7 +161,7 @@ const LokerClassFicationSet = ({ onLockerAdd }) => {
             <TextField
               fullWidth
               size="small"
-              label="번호설정 끝"
+              label="끝번호 설정"
               id="lockerEndNumber"
               placeholder="예) 숫자입력"
               value={lockerEndNumber}
@@ -178,10 +190,10 @@ const LokerClassFicationSet = ({ onLockerAdd }) => {
               <TableCell sx={{ fontWeight: "bold" }}>연번</TableCell>
               <TableCell sx={{ fontWeight: "bold" }}>락커분류명</TableCell>
               <TableCell sx={{ fontWeight: "bold", textAlign: "center" }}>
-                번호설정 시작
+                시작번호
               </TableCell>
               <TableCell sx={{ fontWeight: "bold", textAlign: "center" }}>
-                번호설정 끝
+                끝번호
               </TableCell>
               <TableCell sx={{ fontWeight: "bold", textAlign: "center" }}>
                 관리
@@ -203,6 +215,7 @@ const LokerClassFicationSet = ({ onLockerAdd }) => {
                   <Button
                     variant="contained"
                     color="primary"
+                    size="small"
                     onClick={() => handleEdit(index)}
                     sx={{ marginRight: 1 }}
                   >
@@ -211,6 +224,7 @@ const LokerClassFicationSet = ({ onLockerAdd }) => {
                   <Button
                     variant="contained"
                     color="error"
+                    size="small"
                     onClick={() => handleDelete(index)}
                   >
                     삭제
@@ -239,4 +253,4 @@ const LokerClassFicationSet = ({ onLockerAdd }) => {
   );
 };
 
-export default LokerClassFicationSet;
+export default LockerCategorySet;

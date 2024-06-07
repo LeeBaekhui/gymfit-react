@@ -1,4 +1,5 @@
-import { useState } from "react";
+import React, { useState, useEffect } from "react";
+import Api from "../../../../Api"; // Api 컴포넌트 가져오기
 import {
   Box,
   Button,
@@ -9,7 +10,6 @@ import {
   FormControl,
   Typography,
   Grid,
-  IconButton,
   Table,
   TableBody,
   TableCell,
@@ -18,55 +18,91 @@ import {
   TableRow,
   Paper,
 } from "@mui/material";
-import { Edit, Delete } from "@mui/icons-material";
 
-const LockerPaySet = ({ lockerCategories = [] }) => {
-  const [lockerCategory, setLockerCategory] = useState("");
-  const [lockerName, setLockerName] = useState("");
-  const [term, setTerm] = useState("");
-  const [margin, setMargin] = useState("");
-  const [price, setPrice] = useState("");
-  const [lateFee, setLateFee] = useState("");
-  const [lateFeeState, setLateFeeState] = useState("");
-  const [lockers, setLockers] = useState([]);
+const LockerPaySet = () => {
+  const [lockerPayCategory, setLockerPayCategory] = useState("");
+  const [lockerPayName, setLockerPayName] = useState("");
+  const [lockerPayTerm, setLockerPayTerm] = useState("");
+  const [lockerPayMargin, setLockerPayMargin] = useState("");
+  const [lockerPayPrice, setLockerPayPrice] = useState("");
+  const [lockerPayLateFee, setLockerPayLateFee] = useState("");
+  const [lockerPayLateFeeState, setLockerPayLateFeeState] = useState("");
+  const [lockerPays, setLockerPays] = useState([]);
+  const [lockerCategories, setLockerCategories] = useState([]);
 
-  const handleFormSubmit = (event) => {
-    event.preventDefault();
-    const newLocker = {
-      id: lockers.length + 1,
-      category: lockerCategory,
-      name: lockerName,
-      term: term,
-      margin: margin,
-      price: price,
-      lateFee: lateFee,
-      lateFeeState: lateFeeState,
+  useEffect(() => {
+    const fetchLockerPays = async () => {
+      try {
+        const response = await Api.get("/lockerPays");
+        setLockerPays(response.data);
+      } catch (error) {
+        console.error("There was an error fetching the locker pays!", error);
+      }
     };
-    setLockers([...lockers, newLocker]);
-    // Clear form fields
-    setLockerCategory("");
-    setLockerName("");
-    setTerm("");
-    setMargin("");
-    setPrice("");
-    setLateFee("");
-    setLateFeeState("");
+
+    const fetchLockerCategories = async () => {
+      try {
+        const response = await Api.get("/lockers/categories");
+        setLockerCategories(response.data);
+      } catch (error) {
+        console.error(
+          "There was an error fetching the locker categories!",
+          error
+        );
+      }
+    };
+
+    fetchLockerPays();
+    fetchLockerCategories();
+  }, []);
+
+  const handleFormSubmit = async (event) => {
+    event.preventDefault();
+    const newLockerPay = {
+      lockerPayCategory,
+      lockerPayName,
+      lockerPayTerm,
+      lockerPayMargin,
+      lockerPayPrice,
+      lockerPayLateFee,
+      lockerPayLateFeeState,
+    };
+
+    try {
+      const response = await Api.post("/lockerPays", newLockerPay);
+      setLockerPays([...lockerPays, response.data]);
+      // Clear form fields
+      setLockerPayCategory("");
+      setLockerPayName("");
+      setLockerPayTerm("");
+      setLockerPayMargin("");
+      setLockerPayPrice("");
+      setLockerPayLateFee("");
+      setLockerPayLateFeeState("");
+    } catch (error) {
+      console.error("There was an error creating the locker pay!", error);
+    }
   };
 
-  const handleDelete = (id) => {
-    setLockers(lockers.filter((locker) => locker.id !== id));
+  const handleDelete = async (id) => {
+    try {
+      await Api.delete(`/lockerPays/${id}`);
+      setLockerPays(lockerPays.filter((lockerPay) => lockerPay.id !== id));
+    } catch (error) {
+      console.error("There was an error deleting the locker pay!", error);
+    }
   };
 
   const handleEdit = (id) => {
-    const lockerToEdit = lockers.find((locker) => locker.id === id);
-    setLockerCategory(lockerToEdit.category);
-    setLockerName(lockerToEdit.name);
-    setTerm(lockerToEdit.term);
-    setMargin(lockerToEdit.margin);
-    setPrice(lockerToEdit.price);
-    setLateFee(lockerToEdit.lateFee);
-    setLateFeeState(lockerToEdit.lateFeeState);
-    setLockers(lockers.filter((locker) => locker.id !== id));
+    const lockerPayToEdit = lockerPays.find((lockerPay) => lockerPay.id === id);
+    setLockerPayCategory(lockerPayToEdit.lockerPayCategory);
+    setLockerPayName(lockerPayToEdit.lockerPayName);
+    setLockerPayTerm(lockerPayToEdit.lockerPayTerm);
+    setLockerPayMargin(lockerPayToEdit.lockerPayMargin);
+    setLockerPayPrice(lockerPayToEdit.lockerPayPrice);
+    setLockerPayLateFee(lockerPayToEdit.lockerPayLateFee);
+    setLockerPayLateFeeState(lockerPayToEdit.lockerPayLateFeeState);
+    setLockerPays(lockerPays.filter((lockerPay) => lockerPay.id !== id));
   };
 
   return (
@@ -86,18 +122,18 @@ const LockerPaySet = ({ lockerCategories = [] }) => {
               </InputLabel>
               <Select
                 labelId="locker-category-select-label"
-                id="u_ridx"
-                value={lockerCategory}
+                id="lockerPayCategory"
+                value={lockerPayCategory}
                 label="락커분류선택"
-                onChange={(e) => setLockerCategory(e.target.value)}
+                onChange={(e) => setLockerPayCategory(e.target.value)}
                 size="small"
               >
                 <MenuItem value="">
                   <em>락커분류를 선택하세요</em>
                 </MenuItem>
                 {lockerCategories.map((category, index) => (
-                  <MenuItem key={index} value={category.name}>
-                    {category.name}
+                  <MenuItem key={index} value={category}>
+                    {category}
                   </MenuItem>
                 ))}
               </Select>
@@ -108,8 +144,8 @@ const LockerPaySet = ({ lockerCategories = [] }) => {
               fullWidth
               label="락커결제명"
               placeholder="락커 결제명을 입력하세요."
-              value={lockerName}
-              onChange={(e) => setLockerName(e.target.value)}
+              value={lockerPayName}
+              onChange={(e) => setLockerPayName(e.target.value)}
               required
               size="small"
             />
@@ -121,10 +157,10 @@ const LockerPaySet = ({ lockerCategories = [] }) => {
               </InputLabel>
               <Select
                 labelId="term-select-label"
-                id="u_term"
-                value={term}
+                id="lockerPayTerm"
+                value={lockerPayTerm}
                 label="기간설정"
-                onChange={(e) => setTerm(e.target.value)}
+                onChange={(e) => setLockerPayTerm(e.target.value)}
                 size="small"
               >
                 {[...Array(12).keys()].map((i) => (
@@ -140,8 +176,8 @@ const LockerPaySet = ({ lockerCategories = [] }) => {
               fullWidth
               label="락커보증금"
               placeholder="금액입력"
-              value={margin}
-              onChange={(e) => setMargin(e.target.value)}
+              value={lockerPayMargin}
+              onChange={(e) => setLockerPayMargin(e.target.value)}
               required
               type="number"
               size="small"
@@ -152,8 +188,8 @@ const LockerPaySet = ({ lockerCategories = [] }) => {
               fullWidth
               label="결제금액"
               placeholder="금액입력"
-              value={price}
-              onChange={(e) => setPrice(e.target.value)}
+              value={lockerPayPrice}
+              onChange={(e) => setLockerPayPrice(e.target.value)}
               required
               type="number"
               size="small"
@@ -164,8 +200,8 @@ const LockerPaySet = ({ lockerCategories = [] }) => {
               fullWidth
               label="1일 연체료"
               placeholder="금액입력"
-              value={lateFee}
-              onChange={(e) => setLateFee(e.target.value)}
+              value={lockerPayLateFee}
+              onChange={(e) => setLockerPayLateFee(e.target.value)}
               required
               type="number"
               size="small"
@@ -180,10 +216,10 @@ const LockerPaySet = ({ lockerCategories = [] }) => {
               </InputLabel>
               <Select
                 labelId="late-fee-state-label"
-                id="late_fee_state"
-                value={lateFeeState}
+                id="lockerPayLateFeeState"
+                value={lockerPayLateFeeState}
                 label="사용 여부"
-                onChange={(e) => setLateFeeState(e.target.value)}
+                onChange={(e) => setLockerPayLateFeeState(e.target.value)}
                 size="small"
               >
                 <MenuItem value="1">사용</MenuItem>
@@ -202,44 +238,78 @@ const LockerPaySet = ({ lockerCategories = [] }) => {
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell>연번</TableCell>
-              <TableCell>락커분류</TableCell>
-              <TableCell>락커결제명</TableCell>
-              <TableCell>이용기간</TableCell>
-              <TableCell>보증금</TableCell>
-              <TableCell>결제금액</TableCell>
-              <TableCell>1일/연체료</TableCell>
-              <TableCell>관리</TableCell>
+              <TableCell align="center" sx={{ fontWeight: "bold" }}>
+                연번
+              </TableCell>
+              <TableCell align="center" sx={{ fontWeight: "bold" }}>
+                락커분류
+              </TableCell>
+              <TableCell align="center" sx={{ fontWeight: "bold" }}>
+                락커결제명
+              </TableCell>
+              <TableCell align="center" sx={{ fontWeight: "bold" }}>
+                이용기간
+              </TableCell>
+              <TableCell align="center" sx={{ fontWeight: "bold" }}>
+                보증금
+              </TableCell>
+              <TableCell align="center" sx={{ fontWeight: "bold" }}>
+                결제금액
+              </TableCell>
+              <TableCell align="center" sx={{ fontWeight: "bold" }}>
+                연체료
+              </TableCell>
+              <TableCell align="center" sx={{ fontWeight: "bold" }}>
+                유무
+              </TableCell>
+              <TableCell align="center" sx={{ fontWeight: "bold" }}>
+                관리
+              </TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {lockers.map((locker) => (
-              <TableRow key={locker.id}>
-                <TableCell>{locker.id}</TableCell>
-                <TableCell>{locker.category}</TableCell>
-                <TableCell>{locker.name}</TableCell>
-                <TableCell>{locker.term}개월</TableCell>
-                <TableCell>{locker.margin} 원</TableCell>
-                <TableCell>{locker.price} 원</TableCell>
-                <TableCell>
-                  {locker.lateFee} 원 (
-                  {locker.lateFeeState === "1" ? "사용" : "사용안함"})
+            {lockerPays.map((lockerPay) => (
+              <TableRow key={lockerPay.id}>
+                <TableCell align="center">{lockerPay.id}</TableCell>
+                <TableCell align="center">
+                  {lockerPay.lockerPayCategory}
                 </TableCell>
-                <TableCell>
-                  <IconButton
+                <TableCell align="center">{lockerPay.lockerPayName}</TableCell>
+                <TableCell align="center">
+                  {lockerPay.lockerPayTerm}개월
+                </TableCell>
+                <TableCell align="center">
+                  {lockerPay.lockerPayMargin} 원
+                </TableCell>
+                <TableCell align="center">
+                  {lockerPay.lockerPayPrice} 원
+                </TableCell>
+                <TableCell align="center">
+                  {lockerPay.lockerPayLateFee} 원
+                </TableCell>
+                <TableCell align="center">
+                  {lockerPay.lockerPayLateFeeState === "1"
+                    ? "사용"
+                    : "사용안함"}
+                </TableCell>
+                <TableCell align="center">
+                  <Button
                     size="small"
+                    variant="contained"
                     color="primary"
-                    onClick={() => handleEdit(locker.id)}
+                    onClick={() => handleEdit(lockerPay.id)}
+                    sx={{ marginRight: 1 }}
                   >
-                    <Edit fontSize="small" />
-                  </IconButton>
-                  <IconButton
+                    수정
+                  </Button>
+                  <Button
                     size="small"
-                    color="secondary"
-                    onClick={() => handleDelete(locker.id)}
+                    variant="contained"
+                    color="error"
+                    onClick={() => handleDelete(lockerPay.id)}
                   >
-                    <Delete fontSize="small" />
-                  </IconButton>
+                    삭제
+                  </Button>
                 </TableCell>
               </TableRow>
             ))}

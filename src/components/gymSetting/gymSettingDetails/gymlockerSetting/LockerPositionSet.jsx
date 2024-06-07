@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import Api from "../../../../Api"; // Api 컴포넌트 가져오기
 import {
   Box,
   Button,
@@ -24,34 +25,71 @@ const LockerPositionSet = () => {
   const [loH, setLoH] = useState("");
   const [loName, setLoName] = useState("");
   const [positions, setPositions] = useState([]);
+  const [lockerCategories, setLockerCategories] = useState([]);
 
-  const handleFormSubmit = (event) => {
+  useEffect(() => {
+    const fetchLockerCategories = async () => {
+      try {
+        const response = await Api.get("/lockers/categories");
+        setLockerCategories(response.data);
+      } catch (error) {
+        console.error(
+          "There was an error fetching the locker categories!",
+          error
+        );
+      }
+    };
+
+    const fetchPositions = async () => {
+      try {
+        const response = await Api.get("/lockerPositions");
+        setPositions(response.data);
+      } catch (error) {
+        console.error("There was an error fetching the positions!", error);
+      }
+    };
+
+    fetchLockerCategories();
+    fetchPositions();
+  }, []);
+
+  const handleFormSubmit = async (event) => {
     event.preventDefault();
     const newPosition = {
-      id: positions.length + 1,
-      category: lockIdx,
-      loW: loW,
-      loH: loH,
-      loName: loName,
+      lockerPositionCategory: lockIdx,
+      lockerPositionWidth: loW,
+      lockerPositionHeight: loH,
+      lockerPositionName: loName,
     };
-    setPositions([...positions, newPosition]);
-    // Clear form fields
-    setLockIdx("");
-    setLoW("");
-    setLoH("");
-    setLoName("");
+
+    try {
+      const response = await Api.post("/lockerPositions", newPosition);
+      setPositions([...positions, response.data]);
+      // Clear form fields
+      setLockIdx("");
+      setLoW("");
+      setLoH("");
+      setLoName("");
+    } catch (error) {
+      console.error("There was an error creating the position!", error);
+    }
   };
 
-  const handleDelete = (id) => {
-    setPositions(positions.filter((position) => position.id !== id));
+  const handleDelete = async (id) => {
+    try {
+      await Api.delete(`/lockerPositions/${id}`);
+      setPositions(positions.filter((position) => position.id !== id));
+    } catch (error) {
+      console.error("There was an error deleting the position!", error);
+    }
   };
 
   const handleEdit = (id) => {
     const positionToEdit = positions.find((position) => position.id === id);
-    setLockIdx(positionToEdit.category);
-    setLoW(positionToEdit.loW);
-    setLoH(positionToEdit.loH);
-    setLoName(positionToEdit.loName);
+    setLockIdx(positionToEdit.lockerPositionCategory);
+    setLoW(positionToEdit.lockerPositionWidth);
+    setLoH(positionToEdit.lockerPositionHeight);
+    setLoName(positionToEdit.lockerPositionName);
     setPositions(positions.filter((position) => position.id !== id));
   };
 
@@ -76,7 +114,11 @@ const LockerPositionSet = () => {
                 <MenuItem value="">
                   <em>분류선택</em>
                 </MenuItem>
-                {/* 락커분류 옵션 추가 */}
+                {lockerCategories.map((category, index) => (
+                  <MenuItem key={index} value={category}>
+                    {category}
+                  </MenuItem>
+                ))}
               </Select>
             </FormControl>
           </Grid>
@@ -133,6 +175,9 @@ const LockerPositionSet = () => {
                 락커분류
               </TableCell>
               <TableCell align="center" sx={{ fontSize: "1.0rem" }}>
+                락커번호
+              </TableCell>
+              <TableCell align="center" sx={{ fontSize: "1.0rem" }}>
                 위치명
               </TableCell>
               <TableCell align="center" sx={{ fontSize: "1.0rem" }}>
@@ -156,13 +201,17 @@ const LockerPositionSet = () => {
                   {position.id}
                 </TableCell>
                 <TableCell align="center" sx={{ fontSize: "1.0rem" }}>
-                  {position.category}
+                  {position.lockerPositionCategory}
                 </TableCell>
                 <TableCell align="center" sx={{ fontSize: "1.0rem" }}>
-                  {position.loName}
+                  {position.새로지정}
                 </TableCell>
                 <TableCell align="center" sx={{ fontSize: "1.0rem" }}>
-                  {position.loW} X {position.loH}
+                  {position.lockerPositionName}
+                </TableCell>
+                <TableCell align="center" sx={{ fontSize: "1.0rem" }}>
+                  {position.lockerPositionWidth} X{" "}
+                  {position.lockerPositionHeight}
                 </TableCell>
                 <TableCell
                   align="center"
