@@ -1,6 +1,4 @@
-// 경로: src\components\gymSetting\gymSettingDetails\gymlockerSetting\LockerPositionSet.jsx
-
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import {
   Box,
   Button,
@@ -11,7 +9,6 @@ import {
   FormControl,
   Typography,
   Grid,
-  IconButton,
   Table,
   TableBody,
   TableCell,
@@ -19,22 +16,19 @@ import {
   TableHead,
   TableRow,
   Paper,
-} from '@mui/material';
-import { Edit, Delete, Settings } from '@mui/icons-material';
+} from "@mui/material";
 
 const LockerPositionSet = () => {
-  const [branchIdx, setBranchIdx] = useState('');
-  const [lockIdx, setLockIdx] = useState('');
-  const [loW, setLoW] = useState('');
-  const [loH, setLoH] = useState('');
-  const [loName, setLoName] = useState('');
+  const [lockIdx, setLockIdx] = useState("");
+  const [loW, setLoW] = useState("");
+  const [loH, setLoH] = useState("");
+  const [loName, setLoName] = useState("");
   const [positions, setPositions] = useState([]);
 
   const handleFormSubmit = (event) => {
     event.preventDefault();
     const newPosition = {
       id: positions.length + 1,
-      branch: branchIdx,
       category: lockIdx,
       loW: loW,
       loH: loH,
@@ -42,53 +36,33 @@ const LockerPositionSet = () => {
     };
     setPositions([...positions, newPosition]);
     // Clear form fields
-    setBranchIdx('');
-    setLockIdx('');
-    setLoW('');
-    setLoH('');
-    setLoName('');
+    setLockIdx("");
+    setLoW("");
+    setLoH("");
+    setLoName("");
   };
 
   const handleDelete = (id) => {
-    setPositions(positions.filter(position => position.id !== id));
+    setPositions(positions.filter((position) => position.id !== id));
   };
 
   const handleEdit = (id) => {
-    const positionToEdit = positions.find(position => position.id === id);
-    setBranchIdx(positionToEdit.branch);
+    const positionToEdit = positions.find((position) => position.id === id);
     setLockIdx(positionToEdit.category);
     setLoW(positionToEdit.loW);
     setLoH(positionToEdit.loH);
     setLoName(positionToEdit.loName);
-    setPositions(positions.filter(position => position.id !== id));
-  };
-
-  const handleSettings = (id) => {
-    // 설정 로직 추가
+    setPositions(positions.filter((position) => position.id !== id));
   };
 
   return (
     <Box sx={{ p: 1 }}>
-      <Typography variant="h6" gutterBottom>락커 위치 설정</Typography>
+      <Typography variant="h6" gutterBottom>
+        락커 위치 설정
+      </Typography>
       <Box component="form" onSubmit={handleFormSubmit} sx={{ mb: 2 }}>
-        <Grid container spacing={2}>
-          <Grid item xs={12} sm={6}>
-            <FormControl fullWidth>
-              <InputLabel id="branch-select-label">지점</InputLabel>
-              <Select
-                labelId="branch-select-label"
-                id="branch_idx"
-                value={branchIdx}
-                label="지점"
-                onChange={(e) => setBranchIdx(e.target.value)}
-                size="small"
-              >
-                <MenuItem value=""><em>지점선택</em></MenuItem>
-                {/* 지점 옵션 추가 */}
-              </Select>
-            </FormControl>
-          </Grid>
-          <Grid item xs={12} sm={6}>
+        <Grid container spacing={2} alignItems="center">
+          <Grid item xs={12} md={3}>
             <FormControl fullWidth>
               <InputLabel id="lock-category-select-label">락커분류</InputLabel>
               <Select
@@ -99,12 +73,14 @@ const LockerPositionSet = () => {
                 onChange={(e) => setLockIdx(e.target.value)}
                 size="small"
               >
-                <MenuItem value=""><em>분류선택</em></MenuItem>
+                <MenuItem value="">
+                  <em>분류선택</em>
+                </MenuItem>
                 {/* 락커분류 옵션 추가 */}
               </Select>
             </FormControl>
           </Grid>
-          <Grid item xs={6} sm={3}>
+          <Grid item xs={12} md={3}>
             <TextField
               fullWidth
               label="가로갯수"
@@ -116,7 +92,7 @@ const LockerPositionSet = () => {
               type="number"
             />
           </Grid>
-          <Grid item xs={6} sm={3}>
+          <Grid item xs={12} md={3}>
             <TextField
               fullWidth
               label="세로갯수"
@@ -128,7 +104,7 @@ const LockerPositionSet = () => {
               type="number"
             />
           </Grid>
-          <Grid item xs={12} sm={6}>
+          <Grid item xs={12} md={3}>
             <TextField
               fullWidth
               label="위치명"
@@ -139,41 +115,76 @@ const LockerPositionSet = () => {
               size="small"
             />
           </Grid>
+          <Grid item xs={12} textAlign="center">
+            <Button variant="contained" color="primary" type="submit">
+              만들기
+            </Button>
+          </Grid>
         </Grid>
-        <Box mt={2} textAlign="center">
-          <Button variant="contained" color="primary" type="submit">만들기</Button>
-        </Box>
       </Box>
       <TableContainer component={Paper}>
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell>연번</TableCell>
-              <TableCell>지점</TableCell>
-              <TableCell>락커분류</TableCell>
-              <TableCell>위치명</TableCell>
-              <TableCell>가로X세로</TableCell>
-              <TableCell>관리</TableCell>
+              <TableCell align="center" sx={{ fontSize: "1.0rem" }}>
+                연번
+              </TableCell>
+              <TableCell align="center" sx={{ fontSize: "1.0rem" }}>
+                락커분류
+              </TableCell>
+              <TableCell align="center" sx={{ fontSize: "1.0rem" }}>
+                위치명
+              </TableCell>
+              <TableCell align="center" sx={{ fontSize: "1.0rem" }}>
+                가로X세로
+              </TableCell>
+              <TableCell
+                align="center"
+                sx={{
+                  fontSize: "1.0rem",
+                  minWidth: "150px",
+                }}
+              >
+                관리
+              </TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {positions.map((position) => (
               <TableRow key={position.id}>
-                <TableCell>{position.id}</TableCell>
-                <TableCell>{position.branch}</TableCell>
-                <TableCell>{position.category}</TableCell>
-                <TableCell>{position.loName}</TableCell>
-                <TableCell>{position.loW} X {position.loH}</TableCell>
-                <TableCell>
-                  <IconButton size="small" color="primary" onClick={() => handleEdit(position.id)}>
-                    <Edit fontSize="small" />
-                  </IconButton>
-                  <IconButton size="small" color="default" onClick={() => handleSettings(position.id)}>
-                    <Settings fontSize="small" />
-                  </IconButton>
-                  <IconButton size="small" color="secondary" onClick={() => handleDelete(position.id)}>
-                    <Delete fontSize="small" />
-                  </IconButton>
+                <TableCell align="center" sx={{ fontSize: "1.0rem" }}>
+                  {position.id}
+                </TableCell>
+                <TableCell align="center" sx={{ fontSize: "1.0rem" }}>
+                  {position.category}
+                </TableCell>
+                <TableCell align="center" sx={{ fontSize: "1.0rem" }}>
+                  {position.loName}
+                </TableCell>
+                <TableCell align="center" sx={{ fontSize: "1.0rem" }}>
+                  {position.loW} X {position.loH}
+                </TableCell>
+                <TableCell
+                  align="center"
+                  sx={{ fontSize: "1.0rem", minWidth: "150px" }}
+                >
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    size="small"
+                    onClick={() => handleEdit(position.id)}
+                    sx={{ marginRight: 1 }}
+                  >
+                    수정
+                  </Button>
+                  <Button
+                    variant="contained"
+                    color="secondary"
+                    size="small"
+                    onClick={() => handleDelete(position.id)}
+                  >
+                    삭제
+                  </Button>
                 </TableCell>
               </TableRow>
             ))}

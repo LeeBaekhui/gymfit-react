@@ -20,41 +20,42 @@ const LockerMenu = () => {
         <Grid item xs={12}>
           <Box display="flex" mb={2} sx={{ justifyContent: "center" }}>
             <Button
-              onClick={() => handleButtonClick("LockerProductsView")}
-              variant={activeComponent === "viewProducts" ? "contained" : "outlined"}
-              sx={{ mx: 1 }}
-            >
-              락커현황
-            </Button>
-            <Button
               onClick={() => handleButtonClick("LockerPositionSet")}
-              variant={activeComponent === "lockerPosition" ? "contained" : "outlined"}
+              variant={
+                activeComponent === "lockerPosition" ? "contained" : "outlined"
+              }
               sx={{ mx: 1 }}
             >
               락커위치설정
             </Button>
             <Button
               onClick={() => handleButtonClick("LockerPaySet")}
-              variant={activeComponent === "managePayments" ? "contained" : "outlined"}
+              variant={
+                activeComponent === "managePayments" ? "contained" : "outlined"
+              }
               sx={{ mx: 1 }}
               color="primary"
             >
-              결제관리
+              락커결제설정
             </Button>
             <Button
               onClick={() => handleButtonClick("LokerClassFicationSet")}
-              variant={activeComponent === "classification" ? "contained" : "outlined"}
+              variant={
+                activeComponent === "classification" ? "contained" : "outlined"
+              }
               sx={{ mx: 1 }}
               color="primary"
             >
-              락커분류
+              락커분류설정
             </Button>
           </Box>
           <Paper sx={{ p: 3, boxShadow: 3 }}>
             {activeComponent === "LockerProductsView" && <LockerProductsView />}
             {activeComponent === "LockerPositionSet" && <LockerPositionSet />}
             {activeComponent === "LockerPaySet" && <LockerPaySet />}
-            {activeComponent === "LokerClassFicationSet" && <LokerClassFicationSet />}
+            {activeComponent === "LokerClassFicationSet" && (
+              <LokerClassFicationSet />
+            )}
           </Paper>
         </Grid>
       </Grid>

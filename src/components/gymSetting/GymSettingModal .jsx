@@ -12,16 +12,16 @@ import { useDrawerContext } from "../../layouts/DrawerContext";
 import GymsetLayout from "./GymsetLayout";
 
 const style = {
-  position: 'absolute',
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)', // 모달창 위치 설정
-  width: '85vw', // 모달창 너비를 크게 설정
-  height: '85vh', // 모달창 높이를 크게 설정
-  bgcolor: 'background.paper',
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)", // 모달창 위치 설정
+  width: "90vw", // 모달창 너비를 크게 설정
+  height: "90vh", // 모달창 높이를 크게 설정
+  bgcolor: "background.paper",
   boxShadow: 24,
   p: 0, // 패딩 제거
-  borderRadius: '8px', // 모서리를 둥글게 설정
+  borderRadius: 2, // 모서리를 둥글게 설정
 };
 
 const GymSettingModal = () => {
@@ -37,13 +37,17 @@ const GymSettingModal = () => {
       <Box sx={style}>
         <Box
           sx={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            bgcolor: 'primary.main',
-            color: 'primary.contrastText',
-            p: 2,
-            cursor: 'move',
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            bgcolor: "primary.main",
+            color: "primary.contrastText",
+            p: 1,
+            cursor: "move",
+            borderTopLeftRadius: 2, // 왼쪽 위 모서리 곡률
+            borderTopRightRadius: 2, // 오른쪽 위 모서리 곡률
+            borderBottomLeftRadius: 0, // 왼쪽 아래 모서리 곡률 없음
+            borderBottomRightRadius: 0, // 오른쪽 아래 모서리 곡률 없음
           }}
           id="modal-title"
         >
@@ -61,7 +65,7 @@ const GymSettingModal = () => {
           </IconButton>
         </Box>
         <Divider />
-        <Box sx={{ mt: 2, height: 'calc(100% - 56px)', overflow: 'auto' }}>
+        <Box sx={{ mt: 1, height: "calc(100% - 56px)", overflow: "auto" }}>
           <GymsetLayout /> {/* GymsetLayout 컴포넌트 포함 */}
         </Box>
       </Box>
