@@ -13,11 +13,11 @@ import ExpandLess from "@mui/icons-material/ExpandLess";
 import ExpandMore from "@mui/icons-material/ExpandMore";
 import GroupIcon from "@mui/icons-material/Group";
 import MailIcon from "@mui/icons-material/Mail";
-import SmsIcon from "@mui/icons-material/Sms"; // 문자발송관리
-import DoorSlidingIcon from "@mui/icons-material/DoorSliding"; // 락커관리
-import EditCalendarIcon from "@mui/icons-material/EditCalendar"; // 레슨예약관리
-import ReceiptLongIcon from "@mui/icons-material/ReceiptLong"; // 회계정산관리
-import ManageAccountsIcon from "@mui/icons-material/ManageAccounts"; // 고객관리
+import SmsIcon from "@mui/icons-material/Sms";
+import DoorSlidingIcon from "@mui/icons-material/DoorSliding";
+import EditCalendarIcon from "@mui/icons-material/EditCalendar";
+import ReceiptLongIcon from "@mui/icons-material/ReceiptLong";
+import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
 import MuiDrawer from "@mui/material/Drawer";
 import SettingsIcon from "@mui/icons-material/Settings";
 import Box from "@mui/material/Box";
@@ -26,7 +26,6 @@ import MainContentLayout from "./MainContentLayout";
 
 const drawerWidth = 240;
 
-// Drawer가 열린 상태의 스타일 설정
 const openedMixin = (theme) => ({
   width: drawerWidth,
   transition: theme.transitions.create("width", {
@@ -36,7 +35,6 @@ const openedMixin = (theme) => ({
   overflowX: "hidden",
 });
 
-// Drawer가 닫힌 상태의 스타일 설정
 const closedMixin = (theme) => ({
   transition: theme.transitions.create("width", {
     easing: theme.transitions.easing.sharp,
@@ -49,7 +47,6 @@ const closedMixin = (theme) => ({
   },
 });
 
-// DrawerHeader 스타일 설정
 const DrawerHeader = styled("div")(({ theme }) => ({
   display: "flex",
   alignItems: "center",
@@ -58,7 +55,6 @@ const DrawerHeader = styled("div")(({ theme }) => ({
   ...theme.mixins.toolbar,
 }));
 
-// Drawer 컴포넌트 스타일 설정
 const Drawer = styled(MuiDrawer, {
   shouldForwardProp: (prop) => prop !== "open",
 })(({ theme, open }) => ({
@@ -76,7 +72,6 @@ const Drawer = styled(MuiDrawer, {
   }),
 }));
 
-// 메뉴 항목 정의
 const menuItems = [
   {
     title: "회원관리",
@@ -117,32 +112,22 @@ const menuItems = [
 export default function DrawerLayout() {
   const theme = useTheme();
   const {
-    open, // Drawer 열림 상태
-    handleDrawerOpen, // Drawer 열기 함수
-    handleDrawerClose, // Drawer 닫기 함수
-    handleMenuClick, // 메뉴 클릭 핸들러
-    openSubmenus, // 서브메뉴 열림 상태
-    handleSubMenuClick, // 서브메뉴 클릭 핸들러
-    handleOpenModal, // 모달 열기 핸들러
-    setSelectedMenu, // 선택된 메뉴 설정 함수
+    open,
+    handleDrawerOpen,
+    handleDrawerClose,
+    handleMenuClick,
+    openSubmenus,
+    handleSubMenuClick,
+    handleOpenModal,
+    setSelectedMenu,
   } = useDrawerContext();
-
-  // 설정 메뉴 클릭 핸들러
-  const handleOpenGymSetting = () => {
-    handleOpenModal();
-  };
 
   return (
     <Box sx={{ display: "flex", height: "100vh", overflow: "hidden" }}>
-      {/* Drawer 컴포넌트 */}
       <Drawer variant="permanent" open={open}>
         <DrawerHeader>
           <IconButton onClick={handleDrawerClose}>
-            {theme.direction === "rtl" ? (
-              <ChevronRightIcon />
-            ) : (
-              <ChevronLeftIcon />
-            )}
+            {theme.direction === "rtl" ? <ChevronRightIcon /> : <ChevronLeftIcon />}
           </IconButton>
         </DrawerHeader>
         <Divider />
@@ -155,7 +140,7 @@ export default function DrawerLayout() {
                     handleDrawerOpen();
                   } else {
                     handleMenuClick(menuItem.title);
-                    setSelectedMenu(menuItem.title); // 선택된 메뉴 설정
+                    setSelectedMenu(menuItem.title);
                   }
                 }}
               >
@@ -177,19 +162,11 @@ export default function DrawerLayout() {
                   )}
                 </ListItemIcon>
                 <ListItemText primary={menuItem.title} />
-                {open &&
-                  menuItem.title !== "락커관리" && // "락커관리" 메뉴에 대한 아이콘 표시 제거
-                  (openSubmenus[menuItem.title] ? (
-                    <ExpandLess />
-                  ) : (
-                    <ExpandMore />
-                  ))}
+                {open && menuItem.title !== "락커관리" && (
+                  openSubmenus[menuItem.title] ? <ExpandLess /> : <ExpandMore />
+                )}
               </ListItemButton>
-              <Collapse
-                in={open && openSubmenus[menuItem.title]}
-                timeout="auto"
-                unmountOnExit
-              >
+              <Collapse in={open && openSubmenus[menuItem.title]} timeout="auto" unmountOnExit>
                 <List component="div" disablePadding>
                   {menuItem.items.map((item) => (
                     <ListItemButton
@@ -205,7 +182,7 @@ export default function DrawerLayout() {
             </div>
           ))}
           <Divider />
-          <ListItemButton onClick={handleOpenGymSetting}>
+          <ListItemButton onClick={handleOpenModal}>
             <ListItemIcon>
               <SettingsIcon />
             </ListItemIcon>
@@ -213,7 +190,6 @@ export default function DrawerLayout() {
           </ListItemButton>
         </List>
       </Drawer>
-      {/* MainContentLayout 컴포넌트 */}
       <Box
         component="main"
         sx={{
@@ -222,9 +198,9 @@ export default function DrawerLayout() {
           overflow: "auto",
           width: "100vw",
           height: "100vh",
-        }} // overflow와 height를 설정하여 스크롤바 문제 해결
+        }}
       >
-        <MainContentLayout /> {/* MainContentLayout 추가 */}
+        <MainContentLayout />
       </Box>
     </Box>
   );

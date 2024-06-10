@@ -7,6 +7,8 @@ import MenuIcon from "@mui/icons-material/Menu";
 import { useDrawerContext } from "./DrawerContext";
 import AppBarMenu from "./AppBarMenu";
 
+const drawerWidth = 240;
+
 const AppBar = styled(MuiAppBar, {
   shouldForwardProp: (prop) => prop !== "open",
 })(({ theme, open }) => ({
@@ -16,8 +18,8 @@ const AppBar = styled(MuiAppBar, {
     duration: theme.transitions.duration.leavingScreen,
   }),
   ...(open && {
-    marginLeft: 240,
-    width: `calc(100% - 240px)`,
+    marginLeft: drawerWidth,
+    width: `calc(100% - ${drawerWidth}px)`,
     transition: theme.transitions.create(["width", "margin"], {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.enteringScreen,

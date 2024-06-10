@@ -23,10 +23,7 @@ import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 // DraggablePaperComponent는 Dialog를 드래그 가능하게 만듭니다.
 const DraggablePaperComponent = (props) => {
   return (
-    <Draggable
-      handle="#draggable-dialog-title"
-      cancel={'[class*="MuiDialogContent-root"]'}
-    >
+    <Draggable handle="#draggable-dialog-title" cancel={'[class*="MuiDialogContent-root"]'}>
       <Paper {...props} />
     </Draggable>
   );
@@ -45,7 +42,6 @@ const MemberWebcamModal = ({ open, onClose, onCapture }) => {
   const capture = () => {
     const imageSrc = webcamRef.current.getScreenshot();
     setPhoto(imageSrc);
-    onCapture(imageSrc);
     setCaptureMessage(true);
     setTimeout(() => setCaptureMessage(false), 3000); // 3초 후 메시지 숨기기
   };
@@ -57,8 +53,10 @@ const MemberWebcamModal = ({ open, onClose, onCapture }) => {
   };
 
   const handleApply = () => {
-    onCapture(photo);
-    onClose();
+    if (photo) {
+      onCapture(photo);
+      onClose();
+    }
   };
 
   return (
@@ -72,17 +70,12 @@ const MemberWebcamModal = ({ open, onClose, onCapture }) => {
       BackdropProps={{ style: { backgroundColor: "rgba(0, 0, 0, 0.5)" } }}
       disableEnforceFocus
     >
-      <AppBar sx={{ position: "relative" }}>
-        <Toolbar>
+      <AppBar sx={{ position: "relative", height: 50, justifyContent: "center" }}>
+        <Toolbar sx={{ minHeight: 50 }}>
           <Typography variant="h6" sx={{ flex: 1 }} id="draggable-dialog-title">
             사진 촬영
           </Typography>
-          <IconButton
-            edge="end"
-            color="inherit"
-            onClick={onClose}
-            aria-label="close"
-          >
+          <IconButton edge="end" color="inherit" onClick={onClose} aria-label="close">
             <CloseIcon />
           </IconButton>
         </Toolbar>
@@ -94,7 +87,7 @@ const MemberWebcamModal = ({ open, onClose, onCapture }) => {
             ref={webcamRef}
             screenshotFormat="image/jpeg"
             width={480}
-            height={360}
+            height={320}
             style={{
               marginBottom: "12px",
               borderRadius: "8px",
@@ -107,8 +100,7 @@ const MemberWebcamModal = ({ open, onClose, onCapture }) => {
         <Collapse in={captureMessage}>
           <Alert
             severity="success"
-            sx={{ visibility: captureMessage ? 'visible' : 'hidden', transition: 'visibility 0.5s', height: captureMessage ? '20px' : 0, 
-    overflow: 'hidden', display: 'flex', alignItems: 'center' }}
+            sx={{ visibility: captureMessage ? 'visible' : 'hidden', transition: 'visibility 0.5s', height: captureMessage ? '20px' : 0, overflow: 'hidden', display: 'flex', alignItems: 'center' }}
           >
             촬영이 완료 되었습니다.
           </Alert>

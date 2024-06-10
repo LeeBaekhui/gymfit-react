@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
 import {
   Button,
   TextField,
@@ -10,7 +9,7 @@ import {
   IconButton,
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
-import { createMember, updateMember } from "./MemberAxios";
+import { createMember, updateMember } from "../MemberAxios";
 
 const memberGroups = [
   { value: "group1", label: "Group 1" },
@@ -49,7 +48,6 @@ const MemberForm = ({ existingMember, photo, setPhoto }) => {
     memo: "",
   });
   const [isEditable, setIsEditable] = useState(true); // 입력 가능한 상태
-  const navigate = useNavigate(); // useNavigate 훅 사용
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -100,7 +98,6 @@ const MemberForm = ({ existingMember, photo, setPhoto }) => {
         alert("Member created successfully");
       }
       setIsEditable(false); // 저장 후 수정 불가능 상태로 변경
-      navigate("/member-detail"); // 저장 후 상세 페이지로 이동
     } catch (error) {
       alert("Error occurred");
     }
@@ -238,7 +235,6 @@ const MemberForm = ({ existingMember, photo, setPhoto }) => {
               size="small"
               InputProps={{ style: { fontSize: 14 } }}
               InputLabelProps={{ style: { fontSize: 14 } }}
-              disabled={!isEditable}
             />
           </Grid>
           <Grid item xs={12} sm={6} md={4}>
@@ -326,7 +322,7 @@ const MemberForm = ({ existingMember, photo, setPhoto }) => {
               disabled={!isEditable}
             />
           </Grid>
-          <Grid item xs={12} sm={6} md={6}>
+          <Grid item xs={12} sm={3} md={3}>
             <TextField
               id="postalCode"
               name="postalCode"
@@ -336,9 +332,9 @@ const MemberForm = ({ existingMember, photo, setPhoto }) => {
               onChange={handleChange}
               InputProps={{
                 endAdornment: (
-                  <InputAdornment position="end">
-                    <IconButton onClick={handleAddressSearch}>
-                      <SearchIcon />
+                  <InputAdornment position="end" sx={{ marginRight: '-13px'}}>
+                    <IconButton size="small" onClick={handleAddressSearch}>
+                      <SearchIcon fontSize="small" />
                     </IconButton>
                   </InputAdornment>
                 ),
@@ -349,7 +345,7 @@ const MemberForm = ({ existingMember, photo, setPhoto }) => {
               disabled={!isEditable}
             />
           </Grid>
-          <Grid item xs={12} sm={6} md={7}>
+          <Grid item xs={12} sm={6} md={6}>
             <TextField
               id="address"
               name="address"
@@ -363,7 +359,7 @@ const MemberForm = ({ existingMember, photo, setPhoto }) => {
               disabled={!isEditable}
             />
           </Grid>
-          <Grid item xs={12} sm={6} md={5}>
+          <Grid item xs={12} sm={5} md={3}>
             <TextField
               id="addressDetail"
               name="addressDetail"
@@ -402,18 +398,18 @@ const MemberForm = ({ existingMember, photo, setPhoto }) => {
                 variant="contained"
                 color="primary"
                 fullWidth
-              >
-                저장
-              </Button>
-            ) : (
-              <Button
-                type="button"
-                variant="contained"
-                color="primary"
-                fullWidth
                 onClick={handleEdit}
               >
                 수정
+              </Button>
+            ) : (
+              <Button
+                type="submit"
+                variant="contained"
+                color="primary"
+                fullWidth
+              >
+                저장
               </Button>
             )}
           </Grid>

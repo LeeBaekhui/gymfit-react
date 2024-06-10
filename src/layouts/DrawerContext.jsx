@@ -1,5 +1,3 @@
-// 경로: src\layouts\DrawerContext.jsx
-
 import { createContext, useContext, useState } from "react";
 
 const DrawerContext = createContext();

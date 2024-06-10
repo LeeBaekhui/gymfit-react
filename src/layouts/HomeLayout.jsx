@@ -21,7 +21,7 @@ function HomeContent() {
 export default function HomeLayout() {
   return (
     <DrawerProvider>
-      <Box sx={{ display: "flex", height: "100vh", overflow: "hidden" }}> {/* height와 overflow 설정 */}
+      <Box sx={{ display: "flex", height: "100vh", width: "100vw", overflow: "hidden", paddingTop: 0 }}>
         <HomeContent />
       </Box>
     </DrawerProvider>
