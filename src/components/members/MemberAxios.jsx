@@ -1,4 +1,4 @@
-import api from "@/Api";
+import api from "../../api";
 
 // 회원 생성
 export const createMember = async (member) => {
@@ -6,10 +6,7 @@ export const createMember = async (member) => {
     const response = await api.post("/members", member);
     return response.data;
   } catch (error) {
-    console.error(
-      "Error creating member:",
-      error.response ? error.response.data : error.message
-    );
+    console.error("Error creating member:", error);
     throw error;
   }
 };
@@ -20,10 +17,7 @@ export const updateMember = async (memberId, member) => {
     const response = await api.put(`/members/${memberId}`, member);
     return response.data;
   } catch (error) {
-    console.error(
-      "Error updating member:",
-      error.response ? error.response.data : error.message
-    );
+    console.error("Error updating member:", error);
     throw error;
   }
 };

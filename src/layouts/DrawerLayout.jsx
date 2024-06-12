@@ -12,15 +12,15 @@ import Collapse from "@mui/material/Collapse";
 import ExpandLess from "@mui/icons-material/ExpandLess";
 import ExpandMore from "@mui/icons-material/ExpandMore";
 import GroupIcon from "@mui/icons-material/Group";
-import MailIcon from "@mui/icons-material/Mail";
 import SmsIcon from "@mui/icons-material/Sms";
 import DoorSlidingIcon from "@mui/icons-material/DoorSliding";
 import EditCalendarIcon from "@mui/icons-material/EditCalendar";
 import ReceiptLongIcon from "@mui/icons-material/ReceiptLong";
 import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
-import MuiDrawer from "@mui/material/Drawer";
+import MailIcon from "@mui/icons-material/Mail";
 import SettingsIcon from "@mui/icons-material/Settings";
 import Box from "@mui/material/Box";
+import MuiDrawer from "@mui/material/Drawer";
 import { useDrawerContext } from "./DrawerContext";
 import MainContentLayout from "./MainContentLayout";
 
@@ -76,8 +76,8 @@ const menuItems = [
   {
     title: "회원관리",
     items: [
-      "회원출석현황",
-      "회원조회",
+      "회원출석관리",
+      "회원조회/상세",
       "신규회원등록",
       "회원상담관리",
       "잠재고객관리",
@@ -122,12 +122,40 @@ export default function DrawerLayout() {
     setSelectedMenu,
   } = useDrawerContext();
 
+  const handleOpenGymSetting = () => {
+    handleOpenModal();
+    setSelectedMenu("설정");
+  };
+
   return (
-    <Box sx={{ display: "flex", height: "100vh", overflow: "hidden" }}>
-      <Drawer variant="permanent" open={open}>
+    <Box
+      sx={{
+        display: "flex",
+        width: "100%",
+        height: "100vh",
+        margin: 0,
+        padding: 0,
+      }}
+    >
+      <Drawer
+        variant="permanent"
+        open={open}
+        sx={{
+          flexGrow: 2,
+          p: 0,
+          margin: 0,
+          height: "100vh",
+          overflow: "auto",
+          boxSizing: "border-box",
+        }}
+      >
         <DrawerHeader>
           <IconButton onClick={handleDrawerClose}>
-            {theme.direction === "rtl" ? <ChevronRightIcon /> : <ChevronLeftIcon />}
+            {theme.direction === "rtl" ? (
+              <ChevronRightIcon />
+            ) : (
+              <ChevronLeftIcon />
+            )}
           </IconButton>
         </DrawerHeader>
         <Divider />
@@ -143,6 +171,7 @@ export default function DrawerLayout() {
                     setSelectedMenu(menuItem.title);
                   }
                 }}
+                sx={{ paddingY: 1 }} // padding 값을 조정하여 간격 줄이기
               >
                 <ListItemIcon>
                   {menuItem.title === "회원관리" ? (
@@ -162,16 +191,24 @@ export default function DrawerLayout() {
                   )}
                 </ListItemIcon>
                 <ListItemText primary={menuItem.title} />
-                {open && menuItem.title !== "락커관리" && (
-                  openSubmenus[menuItem.title] ? <ExpandLess /> : <ExpandMore />
-                )}
+                {open &&
+                  menuItem.title !== "락커관리" &&
+                  (openSubmenus[menuItem.title] ? (
+                    <ExpandLess />
+                  ) : (
+                    <ExpandMore />
+                  ))}
               </ListItemButton>
-              <Collapse in={open && openSubmenus[menuItem.title]} timeout="auto" unmountOnExit>
+              <Collapse
+                in={open && openSubmenus[menuItem.title]}
+                timeout="auto"
+                unmountOnExit
+              >
                 <List component="div" disablePadding>
                   {menuItem.items.map((item) => (
                     <ListItemButton
                       key={item}
-                      sx={{ pl: 4 }}
+                      sx={{ pl: 4, paddingY: 0.5 }} // 서브메뉴 간 간격 줄이기
                       onClick={() => handleSubMenuClick(item)}
                     >
                       <ListItemText primary={item} />
@@ -182,7 +219,7 @@ export default function DrawerLayout() {
             </div>
           ))}
           <Divider />
-          <ListItemButton onClick={handleOpenModal}>
+          <ListItemButton onClick={handleOpenGymSetting}>
             <ListItemIcon>
               <SettingsIcon />
             </ListItemIcon>
@@ -193,11 +230,13 @@ export default function DrawerLayout() {
       <Box
         component="main"
         sx={{
-          flexGrow: 1,
-          p: 3,
-          overflow: "auto",
-          width: "100vw",
+          flexGrow: 7,
+          p: 0,
+          margin: 0,
+          width: "100%",
           height: "100vh",
+          overflow: "auto",
+          boxSizing: "border-box",
         }}
       >
         <MainContentLayout />

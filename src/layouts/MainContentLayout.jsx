@@ -1,12 +1,15 @@
+import React from "react";
 import Box from "@mui/material/Box";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
-import MemberLayout from "../components/members/MemberLayout";
-import ScheduleForm from "../components/scheduleManagement/ScheduleForm";
+import AttendManageLayout from "../components/aMemberManagement/aAttendManagement/AttendManageLayout";
+import MemSearchLayout from "../components/aMemberManagement/bMemSearch/MemSearchLayout";
+import NewMemberLayout from "../components/aMemberManagement/cNewMember/MemberLayout";
+import MemConsultingLayout from "../components/aMemberManagement/dMemConsulting/MemConsultingLayout";
+import PotenCustomerLayout from "../components/aMemberManagement/ePotentialCustomer/PotenCustomerLayout";
+import ScheduleLayout from "../components/bscheduleManagement/ScheduleLayout";
 import { useDrawerContext } from "../layouts/DrawerContext";
-import GymsetLayout from "../components/gymSetting/GymsetLayout";
-import GymLockerManagement from "../components/gymSetting/gymSettingDetails/gymlockerSetting/GymLockerMangment";
-import MemDetailPage from "../components/members/memDetails/memDetailPage"; // MemDetailPage 컴포넌트 import
+import GymSettingModal from "../components/eGymSetting/GymSettingModal";
 
 const DrawerHeader = styled("div")(({ theme }) => ({
   display: "flex",
@@ -21,16 +24,20 @@ export default function MainContentLayout() {
 
   const renderContent = () => {
     switch (selectedMenu) {
+      case "회원출석관리":
+        return <AttendManageLayout />;
+      case "회원조회/상세":
+        return <MemSearchLayout />;
       case "신규회원등록":
-        return <MemberLayout />;
+        return <NewMemberLayout />;
+      case "회원상담관리":
+        return <MemConsultingLayout />;
+      case "잠재고객관리":
+        return <PotenCustomerLayout />;
       case "레슨스케줄관리":
-        return <ScheduleForm />;
-      case "락커관리":
-        return <GymLockerManagement />;
+        return <ScheduleLayout />;
       case "설정":
-        return <GymsetLayout />;
-      case "회원조회": // 회원조회 메뉴가 선택되었을 때
-        return <MemDetailPage />; // MemDetailPage 렌더링
+        return <GymSettingModal />;
       default:
         return (
           <Typography paragraph>{`Selected Menu: ${selectedMenu}`}</Typography>
@@ -42,30 +49,22 @@ export default function MainContentLayout() {
     <Box
       component="main"
       sx={{
-        display: "flex",
-        flexDirection: "column",
         flexGrow: 1,
-        width: "100%",
-        height: "100%",
-        overflow: "auto",
+        height: "100vh",
+        overflowY: "auto",
+        margin: 0,
+        padding: 0,
+        boxSizing: "border-box",
+        width: "100%", // 전체 너비를 사용하도록 설정
+        maxWidth: "100vw", // 뷰포트 너비에 맞게 조정
       }}
     >
       <DrawerHeader />
-      <Box
-        sx={{
-          flexGrow: 1,
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          padding: 2,
-        }}
-      >
-        {selectedMenu ? (
-          renderContent()
-        ) : (
-          <Typography paragraph>Please select a menu item.</Typography>
-        )}
-      </Box>
+      {selectedMenu ? (
+        renderContent()
+      ) : (
+        <Typography paragraph>Please select a menu item.</Typography>
+      )}
     </Box>
   );
 }

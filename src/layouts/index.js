@@ -1,11 +1,11 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import "./index.css";
-import HomeLayout from "./layouts/HomeLayout";
+import App from "./App"; // App 컴포넌트 import
 
 ReactDOM.render(
   <React.StrictMode>
-    <HomeLayout />
+    <App />
   </React.StrictMode>,
   document.getElementById("root")
 );
